@@ -1,0 +1,87 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oakland Cemetery — Hyperreal Playable Splat Plan</title>
+<style>
+:root{color-scheme:light}
+body{max-width:900px;margin:0 auto;padding:2.5rem 1.4rem 6rem;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;
+ font-size:17px;line-height:1.62;color:#23241f;background:#faf9f6}
+h1{font-size:2rem;line-height:1.2;margin:2.2rem 0 .6rem;border-bottom:2px solid #d97757;padding-bottom:.4rem}
+h2{font-size:1.5rem;margin:2.4rem 0 .5rem;color:#2b2c26}
+h3{font-size:1.2rem;margin:1.8rem 0 .4rem;color:#3a3b34}
+h4{font-size:1.02rem;margin:1.3rem 0 .3rem;color:#55564d}
+p{margin:.6rem 0}
+a{color:#c15f3c}
+code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.86em;background:#efece5;padding:.1em .35em;border-radius:4px}
+pre{background:#2b2c26;color:#f2efe6;padding:1rem 1.1rem;border-radius:8px;overflow-x:auto;font-size:.82rem;line-height:1.5}
+pre code{background:none;padding:0;color:inherit}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid #ddd8cc;padding:.5rem .7rem;text-align:left;vertical-align:top}
+th{background:#efece5}
+blockquote{border-left:4px solid #d97757;margin:1rem 0;padding:.5rem 1rem;background:#f4f1ea;color:#44453d}
+hr{border:none;border-top:1px solid #e2ddd1;margin:2.2rem 0}
+ul,ol{padding-left:1.5rem}
+li{margin:.25rem 0}
+</style></head><body>
+<h1>Oakland Cemetery — Hyperreal Playable Splat Plan</h1>
+<p><strong>Goal:</strong> push the existing nine-tile reconstruction to game-grade hyperrealism —<br>every gravestone individually readable where the source pixels allow it — and<br>deliver it as a walkable &quot;open world&quot; in Unreal Engine or Unity, with tiles<br>streaming in seamlessly. Continue from the trained model; do not start over.</p>
+<p><strong>What we already have (the inheritance):</strong> one global camera solve (all 3,270<br>frames, 100% registered), nine trained 12M-gaussian tiles (dense archival PLYs<br>on Skychief), a verified partition/crop/merge pipeline, and the proven<br>per-tile training recipe (mrnf, JPEG-on-NVMe feeding, 97% GPU).</p>
+<hr>
+<h2>Why the current tiles don&#x27;t read text — and what fixes it</h2>
+<p>Two ceilings bind today&#x27;s tiles, in this order:</p>
+<ol><li><strong>Supervision resolution.</strong> Training saw 3840-px downscales of the</li></ol>
+<p>   8192-px frames — the trainer literally never saw the letterforms you can<br>   read in the source. Fix: train at native (or 5472-px) supervision.<br>   LichtFeld v0.5.3 supports up to 8K supervision on this pipeline.</p>
+<ol><li><strong>Local gaussian density.</strong> 12M gaussians over a ~290 m tile is superb at</li></ol>
+<p>   overview scale but thin at inscription scale. Fix: finer tiles — same 12M<br>   ceiling per tile, applied to a quarter (or ninth) of the ground area, so<br>   density per square meter multiplies by the subdivision factor.</p>
+<p>A third ceiling to respect honestly: <strong>the source pixels themselves.</strong> At<br>300 ft the ground sampling is roughly 1–2 cm per pixel. Where you can read a<br>stone in the source photo, the splat can learn it; where the source is<br>borderline, no amount of training invents letters. The pilot&#x27;s acceptance test<br>compares splat renders directly against source-photo crops of named stones so<br>we measure exactly this transfer.</p>
+<hr>
+<h2>Stage 1 — Pilot: one sub-tile, continued training, native resolution</h2>
+<p>Pick a text-rich quarter of tile B2 (the obelisk sector). Then:</p>
+<ol><li><strong>Subdivide the partition</strong> with the existing partition script at GRID=6</li></ol>
+<p>   (36 sub-tiles) — same global solve, same visibility rules, ~200–450 images<br>   per sub-tile. Nothing re-aligns; nothing retrains from zero.</p>
+<ol><li><strong>Continue-train, don&#x27;t restart:</strong> initialize from the parent tile&#x27;s</li></ol>
+<p>   dense PLY cropped to the sub-tile&#x27;s expanded bounds (<code>--init</code>), optionally<br>   loading the surrounding parent content frozen (`--add-splat --freeze<br>   --exclude-export<code>) so edges stay supported. Train </code>--strategy mrnf`,<br>   <code>--max-cap 12000000</code> (the proven safe ceiling), **<code>--max-width 5472</code><br>   first, then a native-8192 A/B** on the same sub-tile.</p>
+<ol><li><strong>Feeding discipline:</strong> re-encode the sub-tile&#x27;s frames JPEG q95 to the</li></ol>
+<p>   NVMe at the chosen resolution (the PNG/CPU-decode trap cost 28× once).</p>
+<ol><li><strong>Gates measured on the pilot (the go/no-go for all 36):</strong></li></ol>
+<ul><li>Legibility: render the same five named stones from splat and from source</li></ul>
+<p>     photos; letters that read in source must read in the render.</p>
+<ul><li>VRAM headroom through a densification burst at 5472/8192 px (12M fit in</li></ul>
+<p>     8.5 GB at 3840 px; expect roughly 12–16 GB at 5472; native 8192 is the<br>     risk case — if it overflows, 5472 is the production setting).</p>
+<ul><li>Wall-clock per sub-tile → honest total for 36.</li><li>Continued-vs-fresh check: one sub-tile trained from scratch as control,</li></ul>
+<p>     to confirm inheritance actually helps (it should converge much faster).</p>
+<p><strong>Expected pilot cost:</strong> roughly half a day including the A/B.</p>
+<h2>Stage 2 — The one decision that could force retraining (assess, then decide)</h2>
+<p>The poses came from the default alignment recipe (feature budget tuned for<br>low-res video, ~0.9k features per megapixel). If the pilot&#x27;s text is soft in a<br>way that looks like pose blur rather than resolution or density (double edges,<br>smearing on every stone in one direction), the fix is the tuned re-alignment<br>from the master plan (100k features/frame) — which produces new poses and<br>means retraining tiles against them. This is the only scenario that restarts<br>anything, and we only pay it if the pilot proves current poses are the<br>bottleneck. The pilot A/B makes this a measurement, not a guess.</p>
+<h2>Stage 3 — Production: 36 sub-tiles (6×6), resumable queue</h2>
+<ul><li>Same queue machinery as the overnight run: skip-done markers, solo trainer</li></ul>
+<p>  on the GPU, prep staged ahead on NVMe, watcher with stall detection.</p>
+<ul><li>Budget at 12M × 36 at 5472 px: expect roughly 2–3.5 h per sub-tile →</li></ul>
+<p>  <strong>~3–5 days of continuous GPU</strong>. (49 tiles at 7×7 is the same recipe and<br>  ~35% more hours; the pilot&#x27;s numbers decide whether 36 or 49 is the right<br>  spend — beyond ~49 the returns fall below the source pixels&#x27; ceiling.)</p>
+<ul><li>Yield: ~430M trained gaussians, ~200M+ in the cropped cores — a 4×</li></ul>
+<p>  density multiply over today, trained on 2× (or native) supervision.</p>
+<ul><li>Each sub-tile gets the same finishing pass as today&#x27;s tiles: crop to core,</li></ul>
+<p>  floater prune, verified bounds before anything ships.</p>
+<h2>Stage 4 — LOD ladder and engine-ready export</h2>
+<p>For each sub-tile, export a three-step ladder with the existing transform<br>tooling (full / quarter / sixteenth density, plain concatenable PLYs, one<br>shared world frame, real meters — no per-tile scale tricks this time; the<br>engine handles navigation feel):</p>
+<ul><li><strong>LOD0</strong> full density (near-field, the readable-text experience)</li><li><strong>LOD1</strong> ~25% (mid-distance)</li><li><strong>LOD2</strong> ~6% (skyline/far)</li></ul>
+<p>Also export one whole-site LOD2 merge as the horizon backdrop.</p>
+<h2>Stage 5 — The playable build (Unreal first, Unity as fallback)</h2>
+<ul><li><strong>Unreal Engine 5 + a 3DGS plugin</strong> (current field: Volinga, XVERSE</li></ul>
+<p>  XV3DGS, Luma; pick after a one-day bake-off rendering our densest sub-tile<br>  at 60 fps target on the 3090). UE5&#x27;s <strong>World Partition</strong> streams cells<br>  natively — each sub-tile becomes a cell asset; LOD swaps by distance; the<br>  shared world frame makes the seams invisible by construction, and we<br>  already proved seam-free crops at the current scale.</p>
+<ul><li><strong>Unity fallback:</strong> aras-p&#x27;s UnityGaussianSplatting is the most mature</li></ul>
+<p>  open renderer; same tiling/LOD design applies.</p>
+<ul><li>Player setup: walking character at eye level, collision from a coarse</li></ul>
+<p>  ground mesh (derivable from the SfM cloud), start position on the main<br>  avenue by the obelisk.</p>
+<ul><li>Acceptance: walk from gate to obelisk reading stones along the way, 60 fps,</li></ul>
+<p>  no visible tile pops, no floaters at eye level.</p>
+<h2>Stage 6 — Capture-gap honesty (optional future pass)</h2>
+<p>Wherever the pilot shows source pixels themselves are the limit (small<br>footstones, worn inscriptions), the durable fix is a supplemental<br>low-altitude or ground-level pass over those rows with the rig or drone,<br>merged into the same global frame via RealityScan registration. Flagged now<br>so expectations are set by physics, not hope.</p>
+<hr>
+<h2>Cost and calendar (honest)</h2>
+<table><thead><tr><th>Phase</th><th>GPU time</th><th>Calendar</th></tr></thead><tbody><tr><td>Pilot sub-tile + A/B + control</td><td>~4–6 h</td><td>half a day</td></tr><tr><td>(Only if poses prove weak: re-align + retrain baseline)</td><td>+8–14 h</td><td>+1 day</td></tr><tr><td>36 sub-tiles production</td><td>~70–125 h</td><td>3–5 days unattended</td></tr><tr><td>LOD ladder + exports</td><td>~6 h</td><td>overlaps</td></tr><tr><td>Engine bake-off + playable build</td><td>—</td><td>1–2 days hands-on</td></tr></tbody></table>
+<p>Disk: ~250–400 GB on the RAID for sub-tile outputs and LOD ladders.</p>
+<h2>What I need from you</h2>
+<ol><li>A go on the pilot (it&#x27;s cheap and answers every open number).</li><li>Your engine preference — Unreal or Unity — or let the bake-off decide.</li><li>Five gravestones you want as the legibility benchmark (or I pick</li></ol>
+<p>   text-rich stones from the source set).</p>
+</body></html>

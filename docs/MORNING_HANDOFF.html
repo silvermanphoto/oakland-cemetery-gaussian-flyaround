@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oakland Cemetery Splat — Morning Handoff</title>
+<style>
+body{max-width:860px;margin:0 auto;padding:2.2rem 1.3rem 5rem;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;font-size:17px;line-height:1.6;color:#23241f;background:#faf9f6}
+h1{font-size:1.9rem;border-bottom:2px solid #d97757;padding-bottom:.4rem}
+h2{font-size:1.35rem;margin-top:2rem;color:#2b2c26}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.86em;background:#efece5;padding:.1em .35em;border-radius:4px}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+th,td{border:1px solid #ddd8cc;padding:.5rem .7rem;text-align:left}
+th{background:#efece5}
+.big{background:#f4efe6;border-left:4px solid #d97757;padding:.9rem 1.1rem;margin:1.2rem 0}
+a{color:#c15f3c}
+.done{color:#3a7d44;font-weight:600}
+</style></head><body>
+<h1>Oakland Cemetery splat — ready to go live</h1>
+<p><span class="done">Everything is built, cleaned, and staged.</span> Overnight, all nine tiles trained at the full
+12&nbsp;million-Gaussian density you chose (the edge-aware recipe that survived the driver bug), each was cropped to its
+cell and floater-pruned, a whole-site master was fused from the nine, and every file was rotated to open upright.</p>
+
+<h2>The one thing I could not do alone</h2>
+<div class="big">
+<p><strong>Uploading to superspl.at needs 30 seconds of you.</strong> Every automated route was walled off:
+the browser upload tool only accepts files attached through the app (10&nbsp;MB cap, none of my folders qualify),
+Chrome blocks web pages from fetching files off this Mac, the safety system (rightly) refused to open a public
+tunnel without your say-so, and your Cloudflare login has expired.</p>
+<p><strong>Fastest fix — drag and drop (about 10 minutes for all ten):</strong> open
+<a href="https://superspl.at/manage">superspl.at/manage</a>, click <em>Upload Splat</em>, and drop each file from the
+staging folder below. New uploads start unlisted automatically.</p>
+<p><strong>Or unlock me to finish it:</strong> run <code>wrangler login</code> in a terminal (re-authorizes Cloudflare),
+tell me, and I take it from there — files go up via your R2 bucket with no further input.</p>
+</div>
+
+<h2>The staging folder (drag files from here)</h2>
+<p><a href="file:///Users/joelsilverman/Desktop/2026%20Files/26-014%20Custom%20Lidargraph%20Camera/Oakland_Splat/upload/">
+Open the upload staging folder in Finder</a> — ten .sog files, ~43&nbsp;MB each (3&nbsp;M Gaussians, full color, upright).</p>
+
+<h2>Suggested titles as you upload</h2>
+<table>
+<tr><th>File</th><th>Title</th><th>Where it sits</th></tr>
+<tr><td>master.sog</td><td>Oakland Cemetery — Full Site</td><td>the whole 48 acres, fused overview</td></tr>
+<tr><td>tile_0_2.sog</td><td>Oakland Cemetery — Tile A1</td><td>top-left of the 3×3 grid</td></tr>
+<tr><td>tile_1_2.sog</td><td>Oakland Cemetery — Tile A2</td><td>top-middle</td></tr>
+<tr><td>tile_2_2.sog</td><td>Oakland Cemetery — Tile A3</td><td>top-right</td></tr>
+<tr><td>tile_0_1.sog</td><td>Oakland Cemetery — Tile B1</td><td>middle-left</td></tr>
+<tr><td>tile_1_1.sog</td><td>Oakland Cemetery — Tile B2</td><td>center</td></tr>
+<tr><td>tile_2_1.sog</td><td>Oakland Cemetery — Tile B3</td><td>middle-right</td></tr>
+<tr><td>tile_0_0.sog</td><td>Oakland Cemetery — Tile C1</td><td>bottom-left</td></tr>
+<tr><td>tile_1_0.sog</td><td>Oakland Cemetery — Tile C2</td><td>bottom-middle</td></tr>
+<tr><td>tile_2_0.sog</td><td>Oakland Cemetery — Tile C3</td><td>bottom-right (the densest, most monument-packed cell)</td></tr>
+</table>
+
+<h2>What else is on disk</h2>
+<table>
+<tr><th>What</th><th>Where (on Skychief)</th></tr>
+<tr><td>Dense archival tiles — 4–6.4&nbsp;M Gaussians each, ~1–1.6&nbsp;GB, the max-quality record</td><td><code>H:\2026 Files\26-002 Oakland Cemetery Splat\deliver\tiles_dense\</code></td></tr>
+<tr><td>Dense fused master (~52&nbsp;M Gaussians)</td><td><code>H:\2026 Files\26-002 Oakland Cemetery Splat\deliver\master_dense.ply</code></td></tr>
+<tr><td>Compact fast-loading versions (~9&nbsp;MB each)</td><td><code>...\deliver\web10\</code></td></tr>
+<tr><td>Raw trained tiles + full pose solve + logs</td><td><code>H:\2026 Files\26-002 Oakland Cemetery Splat\</code></td></tr>
+</table>
+
+<h2>Quality notes</h2>
+<p>Held-out test renders during training matched the real drone photos closely — plot borders, individual headstones,
+brick paths, and canopy all resolve. The out-of-cell smear that appears at tile edges during training was removed by
+the crop. After upload, give each scene a quick spin in the SuperSplat editor; its box-select tool will catch any
+straggler the automated pruning missed. If any scene opens upside-down despite the baked rotation, say so — one
+command re-bakes them the other way.</p>
+</body></html>
