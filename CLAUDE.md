@@ -51,8 +51,8 @@ box-crop of `master_dense.ply`), retrain with `--strategy mrnf`, cap 12M,
 supervision at 5472px (native-8192 A/B pending) → ~4× density on 2×+ detail.
 Then LOD ladders per sub-tile and an Unreal Engine 5 World Partition build
 (Unity aras-p renderer as fallback). Pilot = `tile_3_2` (obelisk cell).
-Legibility gate: render vs source-photo crops of named stones — letters
-readable in source must read in the splat.
+Quality gate: judged by eye against the source frames' sharpness (Joel was
+the pilot; the footage is razor sharp — no reference-frame ceremony needed).
 
 ## Hard-won rules that bind every job here
 
@@ -76,6 +76,7 @@ readable in source must read in the splat.
 ## Git
 
 Local repo; `upload/`, `gravestone_samples/`, `renders/` gitignored (large,
-regenerable). Private GitHub remote under silvermanphoto pending Joel's
-go-ahead (repo name suggestion: `jls-oakland-flyaround`). Never force-push;
+regenerable). PUBLIC GitHub repo `silvermanphoto/oakland-cemetery-gaussian-flyaround`
+(Joel's explicit call, 2026-07-17 — an exception to the private default; the
+README is written in his voice for a public audience). Never force-push;
 never commit secrets or multi-GB binaries.
