@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oakland Cemetery flyaround — project health, July 17–19, 2026</title>
+<style>
+  :root { --ink:#1e1e1c; --soft:#5c5d57; --line:#e2ddd3; --bg:#faf7f1; --panel:#fffdf9;
+          --accent:#74c4a4; --warn:#b5502f; --good:#3f7a56; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;
+         font-size:17px; line-height:1.62; }
+  .wrap { max-width:860px; margin:0 auto; padding:40px 26px 90px; }
+  header { border-bottom:2px solid var(--line); padding-bottom:20px; margin-bottom:8px; }
+  h1 { font-size:30px; line-height:1.2; margin:0 0 8px; letter-spacing:-0.01em; }
+  .meta { color:var(--soft); font-size:15px; }
+  .draftnote { background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--accent);
+               padding:12px 16px; border-radius:8px; margin:22px 0; color:var(--soft); font-size:15px; }
+  h2 { font-size:22px; margin:40px 0 6px; padding-top:14px; border-top:1px solid var(--line); }
+  h2 .n { color:var(--accent); font-weight:700; margin-right:8px; }
+  h3 { font-size:17px; margin:22px 0 4px; }
+  p { margin:10px 0; }
+  strong { color:var(--ink); }
+  em { color:var(--soft); }
+  ul { margin:10px 0; padding-left:22px; }
+  li { margin:7px 0; }
+  code { background:#f0ece3; padding:1px 5px; border-radius:4px; font-size:14px;
+         font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:#4a4a44; }
+  table { border-collapse:collapse; width:100%; margin:16px 0; font-size:15px; }
+  th,td { text-align:left; padding:9px 11px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--panel); font-weight:700; }
+  td.num { white-space:nowrap; }
+  .waste { color:var(--warn); font-weight:700; }
+  .good { color:var(--good); font-weight:700; }
+  .verdict { background:var(--panel); border:1px dashed var(--line); border-radius:8px;
+             padding:22px; color:var(--soft); font-style:italic; text-align:center; }
+  .src { color:var(--soft); font-size:14px; }
+  ol.risk { padding-left:0; list-style:none; counter-reset:r; }
+  ol.risk > li { counter-increment:r; position:relative; padding:12px 0 12px 42px; border-bottom:1px solid var(--line); }
+  ol.risk > li::before { content:counter(r); position:absolute; left:0; top:12px; width:28px; height:28px;
+        background:var(--accent); color:#12332a; border-radius:50%; display:flex; align-items:center;
+        justify-content:center; font-weight:700; font-size:15px; }
+  .mit { display:block; color:var(--soft); font-size:15px; margin-top:3px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Oakland Cemetery flyaround — project health</h1>
+  <div class="meta">Three-day review &middot; July 17–19, 2026 (through ~2:30 pm on the 19th)<br>
+  Every figure was read from a file, log, or live query during this review; sources named inline.</div>
+</header>
+
+<div class="draftnote">Draft for the lead's eye, written in Joel-facing voice. The verdict at the
+bottom is intentionally blank for the lead to write.</div>
+
+<h2><span class="n">1</span>What the three days produced</h2>
+
+<h3>The whole cemetery, retrained at full resolution — finished</h3>
+<p>The headline deliverable is the complete set of <strong>36 native-resolution tiles</strong>: the
+site cut into a six-by-six grid, every cell trained on the full 8,192-pixel frames rather than the
+down-scaled versions the first nine-tile build ever saw. All 36 are on disk on the studio PC,
+<strong>74.4 GB total</strong> — dense interior cells around 2.8 GB each, sparse edge cells 0.3–0.8 GB
+<span class="src">(read live from <code>out8k</code>, 36 files)</span>. The run finished cleanly at
+<strong>12:51 am on the 19th</strong>, queue reporting "drained", every tile exiting without error
+<span class="src">(queue log tail)</span>. This is the "before" the next quality push measures against,
+and a real step up on its own — the first time the model saw the letterforms the camera captured.</p>
+
+<h3>A single merged camera solve of both flights — finished</h3>
+<p>The big structural move of the window: combining the 300-foot oblique flight with the closer
+125-foot flight into one coordinate frame, so a later tile can pull sharp detail from the low pass and
+headstone faces from the high pass with no stitching. It completed at <strong>4:57 pm on the 18th</strong>
+with <strong>6,588 of 6,589 frames registered</strong> into one connected component, one frame dropped
+<span class="src">(alignment monitor; PNG count verified live at 6,588 in the combined export folder)</span>.
+The foundation of the entire "readable stones" plan now exists.</p>
+
+<h3>A pilot of the close-detail push, and its control — both finished</h3>
+<p>To decide whether the 125-foot data justifies a multi-day re-run of all 36 tiles, one central, dense
+cell was trained two ways: once with both flights combined, once with only the original high flight,
+everything else held identical. Both finished on the 19th <span class="src">(combined 5:01 am, control
+6:56 am; both on disk, 2.8 GB each)</span>, and their web versions were pulled to the Mac for a
+side-by-side. <strong>Important caveat:</strong> these ran at 5,472-pixel supervision, not the full
+8,192, because full resolution would not fit in the studio card's memory at the density the plan calls
+for — and you rejected the 5,472 result, since full resolution is a hard requirement. So the pilot
+proved the pipeline but did <strong>not</strong> produce a shippable answer; the real pilot is moving to
+rented cloud hardware.</p>
+
+<h3>A decided path into the game engine</h3>
+<p>Three candidate splat-rendering plugins for Unreal Engine 5.8 were built and tested against a
+from-source engine build. <strong>NanoGS was chosen</strong> — the only one that compiled cleanly against
+our engine and the only one built for scenes as large as ours. This was processor-only work that never
+touched the graphics card, so it cost the training queue nothing
+<span class="src">(<code>docs/PHASE_A_PLUGIN_DECISION.md</code>)</span>.</p>
+
+<h3>Five preview scenes published</h3>
+<p>Five tiles were published unlisted to the superspl.at viewer on the 18th <span class="src">(carried
+from the working record; not re-verified here — the publishing surface was out of scope for this review)</span>.</p>
+
+<h2><span class="n">2</span>What it cost — time, GPU-hours, dollars (waste included)</h2>
+
+<table>
+  <tr><th>Item</th><th>Cost</th><th>What it bought</th></tr>
+  <tr><td>36 native-resolution tiles (studio 3090)</td><td class="num">~34.6 GPU-hours</td><td>The finished full-resolution site — productive spend</td></tr>
+  <tr><td>Pilot + control experiment (studio 3090)</td><td class="num">~3.4 GPU-hours</td><td>Diagnostic only; ran at a resolution you rejected</td></tr>
+  <tr><td>Merged camera solve (processor)</td><td class="num">~13 hours</td><td>Ran alongside training, not blocking it</td></tr>
+  <tr><td>Cloud account funded</td><td class="num">$25.00</td><td>Rented 48 GB GPU for the full-resolution pilot</td></tr>
+  <tr><td>Cloud spent so far</td><td class="num">$7.95</td><td>Balance now <strong>$17.05</strong> <span class="src">(live query)</span></td></tr>
+  <tr><td>&nbsp;&nbsp;of which: stuck overnight pod</td><td class="num waste">~$7.40 wasted</td><td>Bad image name, billed all night, unmonitored — the largest avoidable loss</td></tr>
+  <tr><td>&nbsp;&nbsp;of which: two killed bad pods + live pod</td><td class="num good">~$0.55</td><td>Caught cheaply by the new safety timer</td></tr>
+</table>
+
+<p><strong>The 3090 did about 38 hours of real work</strong> across the window; the solve added ~13 hours
+of processor time that ran <em>alongside</em> the trainer rather than blocking it — exactly right
+<span class="src">(GPU-hours summed from per-tile queue-log minutes; solve span from the alignment monitor)</span>.</p>
+
+<p><strong>Dollars, plainly:</strong> of the $7.95 spent on cloud, <span class="waste">roughly $7.40 was
+pure waste</span> — a pod launched overnight against a container image name that did not exist, stuck
+pulling it forever, billing the whole time, and running unmonitored because its watcher had no failure
+deadline. That is the reason for the new billing rules in section 3.</p>
+
+<p><strong>Cloud runway:</strong> at <strong>$0.33/hour</strong> for the rented card, $17.05 buys about
+<strong>51 hours</strong> — enough to prove one pilot tile, not a bottomless budget for a full 36-tile
+cloud re-run.</p>
+
+<p><strong>Rework and idle, stated plainly:</strong> the pilot pair (~3.4 GPU-hours) produced no
+shippable tile. And the studio 3090 has been <strong>idle since 6:56 am on the 19th</strong> — about
+seven and a half hours by this review <span class="src">(status file reads "idle"; no trainer process
+running)</span> — because the next full-resolution step needs more memory than the 3090 has and moved to
+the cloud, while the pilot verdict waits on your eye. Idle studio hardware beside a paid cloud card is
+worth a deliberate call, not a drift.</p>
+
+<h2><span class="n">3</span>Incidents, and what changed because of each</h2>
+
+<h3>Incident 1 — the training queue was paused without asking</h3>
+<p>Early on the 18th, with the 36-tile run at 26 of 36 done, the queue was paused so the new merged
+solve could start — a decision made <em>for</em> you off the back of a question you had asked only for
+information. Doubly wrong, because the jobs never competed: the solve is processor-bound, the trainer
+graphics-bound, so they could (and after your correction, did) run side by side. <strong>Change:</strong>
+a standing rule now in place — never pause, stop, or reorder a job you set without asking first, and
+always check whether a new job can simply run alongside the existing one before treating them as a
+conflict. The queue was resumed and finished clean.</p>
+
+<h3>Incident 2 — a cloud pod burned ~$7.40 overnight on a name that did not exist</h3>
+<p>A rented GPU was launched against an image name recalled from memory that turned out not to exist; the
+pod stuck pulling it forever, billed all night, and ran with no watcher that could stop it.
+<strong>Change:</strong> three hard rules now govern any metered resource — (1) verify the external name
+resolves with a cheap read-only check <em>before</em> spending; (2) arm a dead-man's switch that
+auto-terminates the resource if it is not genuinely healthy by a hard deadline; (3) never go idle while a
+meter runs. Already proven: the safety timer caught and killed two later stuck pods for pennies.</p>
+
+<h3>Incident 3 — the studio card cannot hold full resolution at the target density</h3>
+<p>The pilot exposed a real ceiling: at full 8,192-pixel resolution the 24 GB studio 3090 fits about
+<strong>12 million points</strong> per tile (the proof-of-concept peaked near 13.8 GB at that count), but
+the readable-stones plan wants 18–20 million, and at those counts the card ran out of memory (reaching
+22.7 GB, then 18.4 GB, and failing). Twelve million points is effectively the 3090's limit at full
+resolution. <strong>Change:</strong> the full-resolution pilot moved to a rented 48 GB cloud card with
+room for the higher density — the work running now.</p>
+
+<p><em>A smaller fourth stumble: on the 17th a hand-off script meant to auto-start the queue had no runner
+of its own on the PC, so the card sat idle about ten minutes until started by hand. Lesson recorded — on
+Windows the hand-off must be a scheduled task, not a script only the Mac knows about.</em></p>
+
+<h2><span class="n">4</span>Current live state (and its guards)</h2>
+<p>As of the last check, about <strong>2:34 pm on July 19</strong>:</p>
+<ul>
+  <li><strong>One rented cloud GPU is running</strong> — a 48 GB A6000 at <strong>$0.33/hour</strong>, up
+  for under an hour <span class="src">(live query)</span>. It is building the splat trainer from source on
+  a clean, verified base image, after a first attempt failed on a missing compiler setting and was
+  corrected. The build was still going at the last poll.</li>
+  <li><strong>The pilot's 11 GB dataset is transferring to the pod in parallel</strong>, so the trainer can
+  start the moment it finishes compiling <span class="src">(transfer had not yet registered bytes at the
+  last poll — early)</span>.</li>
+  <li><strong>Guards in place:</strong> the pod is covered by the new dead-man's switch — it confirms a
+  real login actually works and auto-terminates the pod (stopping billing) if it is not genuinely reachable
+  within 15 minutes. That guard has already killed two bad pods cheaply today.</li>
+  <li><strong>The studio 3090 is idle</strong> since 6:56 am; its 36 finished tiles and both pilot outputs
+  are safe on disk.</li>
+</ul>
+
+<h2><span class="n">5</span>Risk register (ranked, highest first)</h2>
+<ol class="risk">
+  <li><strong>The cloud build is unproven end-to-end.</strong> We have never yet trained a full
+  native-resolution tile at target density on the rented card — trainer still compiling, dataset still
+  transferring.
+  <span class="mit">Mitigation: in progress under the new billing guards; next milestone is one finished
+  cloud tile to compare against the studio pilot.</span></li>
+
+  <li><strong>Full-resolution work no longer fits the machine we own.</strong> The plan's density at full
+  resolution needs more graphics memory than the 3090 has, structurally pushing heavy lifting to rented
+  hardware (recurring cost) or a bigger card.
+  <span class="mit">Mitigation: open decision — cloud is the stopgap; a hardware path was researched, not
+  chosen.</span></li>
+
+  <li><strong>Cloud credit runway is finite.</strong> About 51 hours remain; a full 36-tile cloud re-run at
+  full resolution could exhaust it if each tile takes hours.
+  <span class="mit">Mitigation: watched; the pilot's cloud wall-clock decides whether the budget covers a
+  full run or only spot tiles.</span></li>
+
+  <li><strong>The whole heavy pipeline funnels through one studio 3090.</strong> Alignment, pilots, and any
+  studio training share one card, so jobs serialize and a fault stops everything.
+  <span class="mit">Mitigation: partly relieved by moving full-resolution work to the cloud; a second local
+  card was researched, not purchased.</span></li>
+
+  <li><strong>The two flights were shot on different days, in different light.</strong> The obliques and the
+  125-foot pass were flown five weeks apart; if their light differs enough, the merged tile could show seams
+  or color shifts the single solve cannot hide.
+  <span class="mit">Mitigation: both flown in bare winter light on the same camera (favorable), but not yet
+  judged on a finished combined tile — the pilot is exactly this test.</span></li>
+
+  <li><strong>Publishing depends on your logged-in browser, by hand.</strong> The superspl.at viewer has no
+  programmatic upload; every scene is placed by driving your signed-in Chrome, and large files still need a
+  manual drag-and-drop.
+  <span class="mit">Mitigation: accepted manual step; documented, not automated.</span></li>
+
+  <li><strong>The hosting viewer is a moving third-party target.</strong> The live scenes sit on
+  superspl.at, whose editor exposes no control over things we care about (auto-rotation speed, for one) and
+  could change under us.
+  <span class="mit">Mitigation: accepted for previews; the durable home is the planned in-engine build we
+  control.</span></li>
+
+  <li><strong>The chosen engine plugin is early software on an unofficial engine version.</strong> NanoGS is
+  marked beta and officially claims support only for engine versions 5.6 and 5.7, not our 5.8; it compiles
+  today but reaches into engine internals a future update could break.
+  <span class="mit">Mitigation: decision recorded with eyes open; a fallback plugin remains on the
+  shelf.</span></li>
+</ol>
+
+<h2><span class="n">6</span>Health verdict — written by the lead</h2>
+<div class="verdict">
+  <p><strong>Healthy where it counts; bruised where it shows; one question left that
+  decides the next month.</strong></p>
+  <p><strong>The asset ledger is decisively positive.</strong> In three days the project
+  banked its two hardest deliverables: the complete 36-tile full-resolution set (the
+  honest &ldquo;before,&rdquo; 74&nbsp;GB, verified on disk) and the merged two-flight
+  camera solve that the entire readable-stones ambition stands on. Add the settled
+  game-engine path and this window produced more durable, verified work than any
+  comparable stretch of the project. None of it needs redoing.</p>
+  <p><strong>The process ledger is the bruise.</strong> Three self-inflicted wounds: a
+  running multi-day render paused without asking; a rented card left billing overnight
+  on a name nobody checked; and a memory ceiling discovered by crashing into it twice,
+  when the arithmetic &mdash; the proof-of-concept cell already showed 13.8&nbsp;GB at
+  12 million points, so 18 million was always going to overflow a 24&nbsp;GB card &mdash;
+  was sitting in our own logs. What keeps this from dragging the grade down is that each
+  wound became machinery, not a promise: the co-scheduling rule, the three billing
+  guards with an automatic kill-switch (already proven twice at pennies), and a written
+  memory-per-density table for sizing future runs. The same class of mistake now has to
+  defeat a mechanism, not a mood.</p>
+  <p><strong>The open question is the project right now.</strong> Nothing yet proves the
+  rented-card path end to end &mdash; no full-resolution combined tile exists anywhere.
+  Until one does, the quality push is a plan, not a result. That single thread decides
+  everything downstream: whether the closer pass sharpens the stones, what a cloud tile
+  costs in hours and dollars, and whether the full-set re-run is a budget line or a
+  fantasy. Hold the bigger-card purchase until that number lands &mdash; the pilot
+  prices the alternative.</p>
+  <p><strong>Budget: sound.</strong> Roughly $8 spent of $25, most of it the one bad
+  night; about 51 hours of cloud runway remain against a pilot that needs a fraction of
+  that. The studio card&rsquo;s three-day ledger (~38 productive hours against ~3.4
+  diagnostic and ~7 idle) is acceptable &mdash; barely &mdash; and the idle tail is
+  addressed as of this afternoon.</p>
+  <p><strong>Since the review&rsquo;s 2:34&nbsp;pm snapshot</strong> (lead&rsquo;s
+  addendum, ~4:45&nbsp;pm): the cloud build failed a second time for a new reason
+  &mdash; the rented pod&rsquo;s host machine runs a graphics driver too old for our
+  toolchain, something no container can fix &mdash; and the parallel data transfer died
+  to a one-shot relay code consumed by a premature first attempt. Both are understood,
+  neither is a dead end, and both fixes are executing now under delegated agents with
+  the billing guards on: the pod is being replaced with one filtered to modern-driver
+  hosts, the transfer restarted with correct sequencing, and the idle studio card has
+  been put to work importing the 36 finished tiles into the game engine &mdash; the
+  stage that was always next. Expect either a finished native-resolution pilot pair or
+  a precise, cheap failure report within hours, not days.</p>
+  <p><strong>Grade, stated plainly: B.</strong> A-grade output, C-grade operations,
+  trending up &mdash; the wounds all landed on the wallet and the clock, never on the
+  data, and every one of them bought a rule that outlives this week.</p>
+</div>
+
+</div>
+</body>
+</html>

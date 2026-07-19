@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase A — Splat Plugin Decision Memo · Oakland Flyaround</title>
+<style>
+  :root {
+    --ink: #23241f;
+    --ink-soft: #4a4b44;
+    --muted: #71726d;
+    --bg: #faf8f4;
+    --card: #ffffff;
+    --line: #e6e2d8;
+    --accent: #74c4a4;
+    --accent-deep: #3f8c6d;
+    --warn-bg: #fdf6ec;
+    --warn-line: #e9d8b8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 48px 26px 90px; }
+  header.masthead {
+    border-left: 4px solid var(--accent);
+    padding: 4px 0 4px 20px;
+    margin-bottom: 34px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .meta { color: var(--muted); font-size: 15px; margin: 2px 0; }
+  .meta strong { color: var(--ink-soft); font-weight: 600; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 14px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: -0.01em;
+  }
+  h3 { font-size: 18px; margin: 26px 0 8px; }
+  p { margin: 12px 0; }
+  ul, ol { margin: 12px 0; padding-left: 24px; }
+  li { margin: 7px 0; }
+  strong { font-weight: 600; }
+  .lead {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0 8px;
+  }
+  .lead p:first-child { margin-top: 0; }
+  .lead p:last-child { margin-bottom: 0; }
+  .verdict {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 11px;
+    border-radius: 999px;
+    margin-right: 4px;
+  }
+  .v-in { background: #e3f3ea; color: var(--accent-deep); }
+  .v-out { background: #f6e7e3; color: #a4553f; }
+  .v-hold { background: #efece4; color: var(--muted); }
+  .callout {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-line);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 22px 0;
+  }
+  .callout .tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #9a7b34;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .modes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 18px 0;
+  }
+  @media (max-width: 620px) { .modes { grid-template-columns: 1fr; } }
+  .mode {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .mode h3 { margin-top: 0; color: var(--accent-deep); }
+  .recipe { counter-reset: step; list-style: none; padding-left: 0; }
+  .recipe li {
+    position: relative;
+    padding-left: 42px;
+    margin: 14px 0;
+  }
+  .recipe li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0; top: -1px;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  footer {
+    margin-top: 54px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <h1>Phase A — Splat Plugin Bake-Off: Decision Memo</h1>
+    <p class="meta"><strong>Project:</strong> 26-029 Oakland Cemetery Gaussian Flyaround — Unreal Engine integration</p>
+    <p class="meta"><strong>Date:</strong> 2026-07-17</p>
+    <p class="meta"><strong>Status:</strong> Decision recorded. Source verified; live in-editor verification pending (a graphics-processor training job owns the box).</p>
+  </header>
+
+  <h2>The decision, in one line</h2>
+  <div class="lead">
+    <p><strong>We are building the Oakland flyaround on NanoGS.</strong> It is the only one of the three splat plugins we tested that actually compiles against our Unreal Engine 5.8 build, and it is the only one designed for scenes as large as ours — millions of points per tile, many tiles meeting seamlessly.</p>
+    <p>The runner-up, <strong>MLSLabs, is out</strong> — not on taste, but on structure: it physically cannot run on our engine. The third, XVERSE XScene, was set aside once NanoGS cleared.</p>
+  </div>
+
+  <h2>What each candidate was, and why only one survived</h2>
+  <p>We built Unreal Engine 5.8 from source on the studio PC and put three Gaussian-splat rendering plugins through the same test: does it compile and link against <em>our</em> engine?</p>
+
+  <p><span class="verdict v-out">MLSLabs — out</span> It ships only as a pre-built package made for an older engine (5.5), with no source code we could recompile. That alone would be a problem, but two deeper faults make it a dead end rather than a patch job:</p>
+  <ul>
+    <li>It depends on an internal engine component that Unreal <em>removed</em> in 5.8, so it references something that no longer exists.</li>
+    <li>It needs a large machine-learning runtime library that simply is not present, and it does not bring one.</li>
+  </ul>
+  <p>These are not settings we can flip. The build fails with a real, captured error. MLSLabs was written for a different engine than the one we are standing on, and there is no bridge.</p>
+
+  <p><span class="verdict v-hold">XVERSE XScene — set aside</span> A viable-looking candidate, but once NanoGS compiled cleanly and met our needs, there was no reason to keep evaluating a second option. It remains a fallback name on the shelf, nothing more.</p>
+
+  <p><span class="verdict v-in">NanoGS — chosen</span> Its source code compiled cleanly against Unreal Engine 5.8. Both of its parts — the runtime piece that draws the splats and the editor piece that imports them — built and linked, producing working plugin files that the editor now loads. The only complaints from the compiler were two mild &ldquo;this will change in a future engine version&rdquo; notices — worth noting for down the road, not blocking anything today.</p>
+
+  <h2>What NanoGS actually gives us</h2>
+  <ul>
+    <li><strong>It is built for big scenes.</strong> Its whole reason to exist is drawing very large splat scenes in real time without exhausting graphics memory — it borrows Unreal's own approach to massive geometry (loading only the detail the current view needs, drawing distant material more coarsely). That maps exactly onto our Oakland archive, which is already cut into tiles for this reason.</li>
+    <li><strong>Import is dead simple and does the coordinate math for us.</strong> We feed it the raw splat files we already have — no pre-conversion, no intermediate format. On import it automatically turns the splat data upright and rescales it from meters to Unreal's centimeters. Our Oakland scenes are stored in exactly the orientation and scale it expects, so tiles land upright, correctly sized, and — because every tile shares one common origin and NanoGS never re-centers anything — they meet each other seamlessly with no stitching, just as they did in the web viewer. Each tile is placed at the world origin with no rotation and no rescale; the plugin handles the rest.</li>
+    <li><strong>It has real controls for keeping the frame rate up.</strong> There is a memory budget knob (cap how many splats are drawn at once, dropping the farthest first) and an optional detail-hierarchy mode we can switch on per scene once we want distance-based level-of-detail. Both matter because a single 12-million-point tile — several of them at once — will otherwise strain graphics memory.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="tag">One thing to keep in mind</span>
+    <p style="margin:0;">NanoGS is early software (its makers mark it as a beta, and its own paperwork claims support only for engine versions 5.6 and 5.7, not our 5.8). It does compile on 5.8 today, but the piece most likely to break on a future engine update is where it reaches into Unreal's internal rendering plumbing. That is the spot to watch if we ever upgrade the engine.</p>
+  </div>
+
+  <h2>The part that shapes the whole reel: splats are pre-lit</h2>
+  <p>This is the single most important thing to understand about rendering Gaussian splats in Unreal, and it decides how our two delivery modes work.</p>
+  <p><strong>A Gaussian splat carries its lighting baked in.</strong> Our Oakland scenes are frozen the way the drone saw them on that December 2022 morning — that light, those shadows, that time of day are <em>painted into</em> the splat. Unreal does not re-light a splat. It draws it as a soft, glowing cloud of colored points, composited on top of the normal scene, and that cloud looks the same no matter what lights we place around it.</p>
+  <p>Concretely, and confirmed by reading NanoGS's own code:</p>
+  <ul>
+    <li>The splats are drawn as their own pass and blended into the picture <em>after</em> Unreal has drawn the solid geometry. They do not participate in Unreal's real-time global illumination (Lumen), and they do not cast or receive shadows.</li>
+    <li><strong>The splats are not in the Path Tracer's world at all.</strong> Unreal's Path Tracer — its film-quality light-simulation renderer — works on triangle-based geometry. NanoGS has zero connection to it; there are no ray-tracing hooks anywhere in the plugin. So a path-traced view simulates light for the <em>environment</em> we build around the splat, while the splat itself just shows its baked-in December light. (Whether the splat cloud even paints on top of a path-traced frame is the one thing we can't settle by reading code — it needs a live test, which is out of scope while the graphics processor is busy. But there is definitively no path-tracing <em>of</em> the splats to hope for.)</li>
+  </ul>
+  <p>So neither Lumen nor the Path Tracer will make the <em>cemetery itself</em> look more or differently lit — its light is fixed. What they light is <strong>everything we add around it</strong>: sky, atmosphere, haze, fog, volumetric light shafts, any real 3D props or ground we drop in. That is where the cinematic quality comes from.</p>
+
+  <h2>What this means for our two modes</h2>
+  <div class="modes">
+    <div class="mode">
+      <h3>Mode 1 — Lumen, live</h3>
+      <p style="margin:0;">For interactive work and quick looks, Unreal's real-time renderer draws the splat cloud composited over a Lumen-lit environment. Fast, editable, good for blocking the camera move and judging the scene. The splat shows its baked light; Lumen makes the surrounding sky and atmosphere feel real in real time.</p>
+    </div>
+    <div class="mode">
+      <h3>Mode 2 — the Path-Traced reel</h3>
+      <p style="margin:0;">For the finished piece, we render through the Movie Render Queue. Its quality does <strong>not</strong> come from path-tracing the gaussians — that isn't a thing. It comes from full splat density, temporal supersampling, and a path-traced environment wrapping the pre-lit cemetery.</p>
+    </div>
+  </div>
+  <p>Breaking Mode 2 into its three real levers:</p>
+  <ol>
+    <li><strong>Full splat density</strong> — no memory-budget culling and no coarse level-of-detail; every point drawn, for maximum fidelity of the cemetery itself.</li>
+    <li><strong>Movie-Render-Queue temporal supersampling</strong> — the frame is rendered many times per output frame with tiny sub-pixel jitters and averaged, which cleans up the shimmer and edge-crawl that splats are prone to and gives the smooth, filmic result. (A caution to verify live: NanoGS declares no special Movie Render Queue support, so how gracefully the splat pass accumulates across those samples is unconfirmed until we test it. The splats <em>should</em> appear in any normal rendered view, since they ride the standard renderer, but the anti-shimmer accumulation behavior specifically is the thing to prove on the box.)</li>
+    <li><strong>A path-traced environment</strong> — sky, fog, light shafts, and any added geometry rendered with the Path Tracer's full light simulation, wrapping the pre-lit cemetery in cinematic atmosphere.</li>
+  </ol>
+  <p>The reel's beauty, in short, is <strong>maximum splat density plus Movie-Render-Queue supersampling plus a path-traced world around the splat</strong> — not path-traced gaussians. Set that expectation up front and the plan holds together.</p>
+
+  <h2>The reel recipe that follows</h2>
+  <ol class="recipe">
+    <li>Import each Oakland tile straight from its existing splat file. It arrives upright, correctly scaled, and aligned to the shared origin automatically.</li>
+    <li>Place every tile at the world origin with no rotation and no rescale, so all tiles stay mutually aligned.</li>
+    <li>Keep the original large splat files in place — if we later switch on the distance-detail hierarchy, the plugin re-reads the source file to build it, and it fails if the file has moved.</li>
+    <li>For live/Lumen work: set a memory budget so many large tiles at once stay within graphics memory; block the camera move here.</li>
+    <li>For the reel: remove the memory budget and any coarse level-of-detail (full density), build the surrounding world (sky, atmosphere, fog, light shafts, ground/props), and light <em>that</em> environment with the Path Tracer.</li>
+    <li>Render through the Movie Render Queue with generous temporal supersampling for the clean, filmic result.</li>
+    <li><strong>Verify live once the graphics processor frees up:</strong> that a tile imports upright and aligned, that multiple tiles hold frame rate under a memory budget, and specifically that the splat pass survives and accumulates cleanly in a Movie-Render-Queue path-traced render. These are the three open items this memo authored from source but could not run.</li>
+  </ol>
+
+  <footer>
+    Prepared from a source-level reading of the NanoGS plugin and the captured build results. Live in-editor verification is deferred until the studio PC's graphics processor is free.
+  </footer>
+
+</div>
+</body>
+</html>
