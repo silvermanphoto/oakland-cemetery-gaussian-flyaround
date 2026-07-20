@@ -22,10 +22,10 @@ string speaks human. No emoji, never "honest"/variants.
 
 - **Source imagery:** `H:\2023 Files\23-002 Oakland Cemetery\12.22.22 Oakland
   300ft Smart Oblique source files\12.23.22 300ft oblique graded` — 3,270 ×
-  44.7MP DJI Zenmuse P1 JPEGs (8192×5460 — camera confirmed by Joel 2026-07-20;
-  earlier notes said Inspire 2, wrong: no Inspire 2 payload shoots 44.7MP; the
-  public README still says Inspire 2 pending Joel's call), 300 ft smart-oblique;
-  233 of them
+  44.7MP DJI Zenmuse P1 JPEGs (8192×5460), flown on a DJI Matrice 300 —
+  aircraft + camera confirmed by Joel 2026-07-20; earlier notes said Inspire 2,
+  wrong (no Inspire 2 payload shoots 44.7MP); README corrected. 300 ft
+  smart-oblique; 233 of them
   are true-nadir (view axis within 10° of vertical). A separate 125 ft nadir
   set (3,319 imgs) exists one folder up — unused so far, a future
   detail-infill source.

@@ -1,6 +1,7 @@
 # Oakland Cemetery, in gaussians
 
-In December 2022 I flew a DJI Inspire 2 over Historic Oakland Cemetery in
+In December 2022 I flew a DJI Matrice 300 carrying the Zenmuse P1 camera
+over Historic Oakland Cemetery in
 Atlanta — 48 acres of Victorian garden cemetery, the city's oldest, where
 Margaret Mitchell and Maynard Jackson are buried under some of the best
 funerary sculpture in the South. The mission was a 300-foot smart-oblique
