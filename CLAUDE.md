@@ -117,8 +117,10 @@ sat idle 5 hours behind a silently dead monitor.) Any status — to Joel or
 internal — that calls a remote job "running" must name the live harness-tracked
 watcher guarding it, liveness verified, not claimed. Delegating a watch to an
 agent does not discharge it: the lead keeps an independent backstop on every
-metered or multi-hour job from LAUNCH, not from the first stall. Audit question
-that must always have an answer: "what wakes you if this dies?"
+metered or multi-hour job from LAUNCH, not from the first stall. Joel audits
+nothing: the standing meter-sentinel (a launchd job on the Mac, every 10 min —
+see the global CLAUDE.md) watches all rented GPUs outside any session and rings
+his phone on sustained idle, old pods, or its own blindness.
 
 **3. Monitor both ends and every terminal state.** A two-party operation
 (transfer, remote build, remote train) gets its watcher on BOTH sides — "no
