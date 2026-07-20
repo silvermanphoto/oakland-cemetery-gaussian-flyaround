@@ -338,8 +338,27 @@ foreach ($t in $settled) {
         $stats = Get-SplatStats -Path $t.Ply
         $cx = $stats.Xmean; $cz = $stats.Zmean
     }
-    $ci = Get-CellIndex -Edges $XEdges -C $cx
-    $cj = Get-CellIndex -Edges $ZEdges -C $cz
+    # Cell from NAME tile_A_B -> grid cell (x=5-A, z=B). WHY: runtime centroid-binning
+    # drifted across grid-column edges on the retrained tiles (2026-07-19) -> false cell
+    # collisions; name rule validated 4 ways (centroids, crop_aabb.json, hyper8k_bounds.json, README).
+    if ($name -notmatch '^tile_(\d+)_(\d+)$') {
+        Log ("{0}: name does not match tile_<A>_<B> -- cannot derive grid cell." -f $name) "ERROR"; $fatal = $true; continue
+    }
+    $A = [int]$Matches[1]; $B = [int]$Matches[2]
+    $xIdx = 5 - $A; $zIdx = $B
+    $nameOutside = ($xIdx -lt 0) -or ($xIdx -gt 5) -or ($zIdx -lt 0) -or ($zIdx -gt 5)
+    $ci = [ordered]@{ Index = $xIdx; Outside = $nameOutside }
+    $cj = [ordered]@{ Index = $zIdx; Outside = $nameOutside }
+    if (-not $nameOutside) {
+        $tol    = 5.0
+        $cLoX = if ($xIdx -eq 0) { -$Rim } else { $XEdges[$xIdx] }
+        $cHiX = if ($xIdx -eq 5) {  $Rim } else { $XEdges[$xIdx + 1] }
+        $cLoZ = if ($zIdx -eq 0) { -$Rim } else { $ZEdges[$zIdx] }
+        $cHiZ = if ($zIdx -eq 5) {  $Rim } else { $ZEdges[$zIdx + 1] }
+        if (($cx -lt $cLoX - $tol) -or ($cx -gt $cHiX + $tol) -or ($cz -lt $cLoZ - $tol) -or ($cz -gt $cHiZ + $tol)) {
+            Log ("{0}: centroid x={1:N3} z={2:N3} is >{3} m outside name-cell(x={4},z={5}) -- proceeding on name rule; verify." -f $name, $cx, $cz, $tol, $xIdx, $zIdx) "WARN"
+        }
+    }
     if ($ci.Outside -or $cj.Outside) {
         Log ("{0}: centroid x={1:N3} z={2:N3} falls OUTSIDE the grid extent -- refusing to crop." -f $name, $cx, $cz) "ERROR"
         $fatal = $true; continue
