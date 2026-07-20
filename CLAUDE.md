@@ -112,6 +112,14 @@ receive; a failed handshake kills the code, so restart the sender for a fresh
 one, never retry the old code. Track the account balance at every phase gate and
 say it in status updates.
 
+**3a. Name the watcher or the lane is stalled.** (2026-07-19, after the trainer
+sat idle 5 hours behind a silently dead monitor.) Any status — to Joel or
+internal — that calls a remote job "running" must name the live harness-tracked
+watcher guarding it, liveness verified, not claimed. Delegating a watch to an
+agent does not discharge it: the lead keeps an independent backstop on every
+metered or multi-hour job from LAUNCH, not from the first stall. Audit question
+that must always have an answer: "what wakes you if this dies?"
+
 **3. Monitor both ends and every terminal state.** A two-party operation
 (transfer, remote build, remote train) gets its watcher on BOTH sides — "no
 bytes arriving" polled thirty times is not a status, it is a dead sender
