@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit: 48 GB Card Utilization vs. the Prime Directive</title>
+<style>
+  body { font-family: -apple-system, "Helvetica Neue", sans-serif; font-size: 17px; line-height: 1.55;
+         color: #2b2a27; background: #faf9f6; max-width: 880px; margin: 2rem auto; padding: 0 1.2rem; }
+  h1 { font-size: 1.7em; line-height: 1.2; } h2 { margin-top: 2em; border-bottom: 2px solid #d97757; padding-bottom: .2em; }
+  .sub { color: #71726d; font-size: 1.05em; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .95em; }
+  th, td { border: 1px solid #ddd8d0; padding: .5em .7em; text-align: left; vertical-align: top; }
+  th { background: #f1ede6; }
+  .waste { background: #fbe9e4; } .prod { background: #e6f2ea; } .nec { background: #f5f1e8; }
+  .big { font-size: 1.25em; font-weight: 700; }
+  .cards { display: flex; gap: 1em; flex-wrap: wrap; margin: 1.2em 0; }
+  .card { flex: 1 1 180px; border: 1px solid #ddd8d0; border-radius: 8px; padding: .9em 1em; background: #fff; }
+  .card .n { font-size: 1.6em; font-weight: 700; } .card .l { color: #71726d; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>Audit: 48&nbsp;GB card utilization vs. the Prime Directive</h1>
+<p class="sub">The complete RunPod rental program, July 19–20, 2026. Every timestamp reconstructed
+from logs on the pod, the Mac, and the studio PC. Times UTC (local = UTC−4).</p>
+
+<div class="cards">
+  <div class="card"><div class="n">26%</div><div class="l">of the working pod's life spent computing</div></div>
+  <div class="card"><div class="n">56%</div><div class="l">spent idle — three windows, all watcher failures</div></div>
+  <div class="card"><div class="n">~$17.50</div><div class="l">program total; a perfect run cost ~$3.30</div></div>
+  <div class="card"><div class="n">0</div><div class="l">failed or repeated trainings — the science is clean</div></div>
+</div>
+
+<h2>1. The working pod's life, hour by hour</h2>
+<p>Pod started Jul&nbsp;19, 18:50Z. Projected teardown ≈ Jul&nbsp;20, 22:25Z — total ≈ <b>27.5 hours ≈ $9.08</b>.</p>
+<table>
+<tr><th>Window (UTC)</th><th>Hours</th><th>What happened</th><th>Class</th></tr>
+<tr class="nec"><td>19th 18:50–19:15</td><td>0.4</td><td>Bring-up: SSH up, driver verified ≥570 (gate passed), build + transfer launched</td><td>Necessary</td></tr>
+<tr class="nec"><td>19th 19:15–19:23</td><td>0.1</td><td>Build died at configure (missing package); transfer downloaded but never unpacked — monitor fired, nothing woke the agent</td><td>Failure onset</td></tr>
+<tr class="waste"><td>19th 19:23–00:30</td><td><b>5.1</b></td><td><b>IDLE #1</b> — build dead, transfer stalled, agent asleep, nobody woken</td><td><b>Waste</b></td></tr>
+<tr class="nec"><td>20th 00:30–04:09</td><td>3.7</td><td>Recovery: build fixed and compiled clean; transfer forensics through relay corruption, hung copies, slow-relay tests</td><td>Necessary + retries</td></tr>
+<tr class="nec"><td>20th 04:09–04:45</td><td>0.6</td><td>Stale archive proven incomplete; fresh relay moved 12&nbsp;GB in ~13&nbsp;min; data verified (462 images + solve)</td><td>Necessary</td></tr>
+<tr class="waste"><td>20th 04:45–06:13</td><td><b>1.5</b></td><td><b>IDLE #2</b> — everything ready, GPU idle, training waited on a human-loop acknowledgment</td><td><b>Waste</b></td></tr>
+<tr class="prod"><td>20th 06:13–09:29</td><td><b>3.3</b></td><td><b>RUN A trains</b> — 20,000 iterations, native 8192, 12M gaussians, ~100% GPU, zero errors</td><td><b>Productive</b></td></tr>
+<tr class="waste"><td>20th 09:29–18:20</td><td><b>8.9</b></td><td><b>IDLE #3</b> — watcher froze mid-check two hours before the finish; Run B never auto-launched. Phone sentinel rang; fixed on Joel's poke</td><td><b>Waste</b></td></tr>
+<tr class="prod"><td>20th 18:20–~22:10</td><td><b>~3.8</b></td><td><b>RUN B trains</b> — 18M gaussians at 26–27&nbsp;GB VRAM (impossible on the 24&nbsp;GB 3090), ~100% GPU, zero errors</td><td><b>Productive</b></td></tr>
+<tr class="nec"><td>~22:10–22:25</td><td>0.25</td><td>Delivery (byte-verified to two machines) + build salvage + teardown</td><td>Necessary</td></tr>
+</table>
+<p><b>Scorecard:</b> productive <b>~7.1&nbsp;h (26%, ~$2.34)</b> · necessary <b>~4.9&nbsp;h (18%, ~$1.62)</b> · pure idle <b>~15.5&nbsp;h (56%, ~$5.10)</b>.</p>
+
+<h2>2. The whole rental program ($25 funded)</h2>
+<table>
+<tr><th>Item</th><th>Cost</th><th>Verdict</th></tr>
+<tr class="waste"><td>Pod #1 — unverified image tag, stuck all night unmonitored</td><td>~$7.40</td><td>100% waste (produced the three billing rules)</td></tr>
+<tr class="nec"><td>Pod #2 — host driver too old, caught by the verify gate, killed fast</td><td>~$0.60</td><td>Cheap failure — the gate worked</td></tr>
+<tr><td>Pod #3 — the working pod (above)</td><td>~$9.08</td><td>26% productive / 18% necessary / 56% idle</td></tr>
+<tr><td>Storage/fee residue</td><td>~$0.40</td><td>Overhead</td></tr>
+<tr><td class="big">Total</td><td class="big">~$17.50</td><td><b>13% bought compute, 9% bought logistics, ~75% bought nothing.</b> Final balance ≈ $7.50 of $25.</td></tr>
+</table>
+<p><b>Perfect-execution counterfactual:</b> ≈ 10 hours ≈ <b>$3.30</b>. The program closes at ~5× the ideal —
+the entire overage is operational (bad tag, dead watchers, stalled hand-offs), not computational.
+Both trainings ran flawlessly at full GPU on the first attempt; the A/B verdict data is uncompromised.</p>
+
+<h2>3. Prime Directive verdicts</h2>
+<ol>
+<li><b>The card idled 56% of its life — three windows, one cause.</b> Every idle hour traces to a monitoring
+failure: a monitor whose exit couldn't wake a sleeping agent, a finished stage with no self-firing successor,
+and a watcher that hung mid-check. The work was never slow — the watching was broken.</li>
+<li><b>Waste concentrated where verification was skipped; verification paid for itself where used.</b>
+The unverified image tag cost $7.40. The driver gate cost $0.60 and saved a second all-night burn.</li>
+<li><b>Stacked unknowns taxed the recovery.</b> New host + fresh build + unproven transfer tool at once made
+each failure ambiguous — roughly 1.5 hours of forensics the canary rule exists to prevent.</li>
+<li><b>What worked:</b> the phone sentinel rang as designed; the $5 kill-floor was never threatened;
+the trainings were clean first-try runs; every model byte-verified to two machines before teardown.</li>
+</ol>
+
+<h2>4. Fixes now standing (each idle window produced one)</h2>
+<ul>
+<li><b>Idle #1 →</b> monitors are local, harness-tracked, bounded pollers whose exit is the wake-up.</li>
+<li><b>Idle #2 →</b> finished stages fire their successors themselves.</li>
+<li><b>Idle #3 →</b> hard timeouts on every remote check inside a watcher; loud exit after consecutive failures;
+a frozen watcher log is itself an alarm. (Field manual updated the same hour.)</li>
+<li><b>Program level →</b> the meter-sentinel — independent of any session — remains the layer that cannot forget.</li>
+</ul>
+
+<h2>5. Actions this audit triggers for the 36-tile rebuild</h2>
+<ol>
+<li><b>Never pay for the build again:</b> the compiled trainer is salvaged off the pod before teardown, so a
+future pod goes from boot to training in minutes, not nine hours.</li>
+<li><b>Transfer recipe is settled:</b> pre-staged archive + the relay that moved 12&nbsp;GB in 13 minutes.</li>
+<li><b>Fleet watchers inherit the hardened pattern</b> — hard timeouts, loud exits, lead backstop from launch.</li>
+</ol>
+<p>With those in place, this same program re-run today costs ≈ <b>$4</b> — the basis on which the
+36-tile rebuild's rental budget should be modeled.</p>
+</body>
+</html>
