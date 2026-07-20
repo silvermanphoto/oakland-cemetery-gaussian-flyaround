@@ -60,7 +60,11 @@ Known deviations/gotchas: actors are plain Actor + GaussianSplatComponent (the
 plugin's actor class is NotPlaceable headless — renders identically; literal
 AGaussianSplatActor placement needs an interactive session); OUT8K TILE NAMES
 ARE SCRAMBLED — output `tile_A_B` occupies grid cell (5−A, B); derive cells
-from the NAME, never runtime centroid-binning (it drifts across grid-column
+from the NAME, never runtime centroid-binning. AND (proven 2026-07-20 by
+--stats bounds): the COMBINED-solve 6×6 partition (`tiles6_combined`) numbers
+its X axis in the OPPOSITE left-right order from the original out8k tiles —
+combined `tile_2_4`'s ground = original `tile_3_4`. NEVER map the two
+partitions by same-name; always map by cell bounds (it drifts across grid-column
 edges on retrained tiles — bug found+fixed 2026-07-19, canonical fix in
 scripts/export_ue_tiles.ps1). Visual verification (seams, fps, flythrough)
 still pending an interactive session — next per the UE plan.
