@@ -43,6 +43,25 @@ string speaks human. No emoji, never "honest"/variants.
   `gravestone_samples/` (five random true-nadir 44.7MP originals for
   benchmark viewing — gitignored), `benchmarks/`, `renders/`.
 
+## UE world state (verified 2026-07-20)
+
+The 36-tile cemetery is ASSEMBLED in Unreal Engine 5.8:
+`H:\2026 Files\26-029 UE\OaklandFlyaround\OaklandFlyaround.uproject` (NanoGS
+enabled), 36 splat assets in `Content\OaklandTiles\`, 36 actors in the saved
+`Content\Maps\OaklandFlyaround.umap` — labels tile_0_0…tile_5_5, all at
+identity transform (NanoGS bakes axis+scale at import). Sources: cell-exact
+crops in `deliver\ue_tiles\` (36 PLYs from out8k). Headless invocation that
+works: `UnrealEditor-Cmd.exe <uproject> -run=pythonscript -script=<py>
+-unattended -nosplash -nopause -stdout`, launched via an S4U scheduled task.
+Known deviations/gotchas: actors are plain Actor + GaussianSplatComponent (the
+plugin's actor class is NotPlaceable headless — renders identically; literal
+AGaussianSplatActor placement needs an interactive session); OUT8K TILE NAMES
+ARE SCRAMBLED — output `tile_A_B` occupies grid cell (5−A, B); derive cells
+from the NAME, never runtime centroid-binning (it drifts across grid-column
+edges on retrained tiles — bug found+fixed 2026-07-19, canonical fix in
+scripts/export_ue_tiles.ps1). Visual verification (seams, fps, flythrough)
+still pending an interactive session — next per the UE plan.
+
 ## The hyperreal plan (docs/HYPERREAL_PLAN.md is the full text)
 
 Continue-train the existing tiles — never restart: subdivide 3×3 → 6×6 (or
