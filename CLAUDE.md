@@ -118,7 +118,12 @@ cut decision: avoid the "cut out by scissors" look. Cuts must land on the
 city's own seams (curb lines, pavement edges, building faces), never through
 the middle of urban fabric — the cemetery reads as a complete artifact on its
 street plinth. When a boundary call is ambiguous, choose the edge that reads
-as a natural urban seam. Implementation: georegister the solve frame to world coordinates via
+as a natural urban seam. NO-HOLES RULE (Joel, 2026-07-21, from his marked-up
+v2 figure): the keep region must contain no stranded unkept ground — every
+pocket enclosed between kept components (cemetery, street band, rail bundle)
+gets filled. The ONLY cuts inside the outer boundary are building footprints;
+buildings stay subtracted even inside filled pockets (his highlight wrapped
+around the building at the north notch). Implementation: georegister the solve frame to world coordinates via
 drone GPS EXIF from the ORIGINAL source JPEGs (the 8192 pool re-encodes may
 have stripped EXIF) fitted against solve camera centers; transform the OSM
 polygon into model coordinates; apply as a point-in-polygon gaussian filter at
