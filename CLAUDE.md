@@ -102,6 +102,54 @@ import, so UE tile actors take an IDENTITY transform. Pilot = `tile_3_2`
 Quality gate: judged by eye against the source frames' sharpness (Joel was
 the pilot; the footage is razor sharp — no reference-frame ceremony needed).
 
+## The eleven principles (Joel + lead, locked 2026-07-21 — govern the rebuild)
+
+Joel's five: (1) video-game level — the finest splat the software and photo
+sets permit; (2) prime directive — fast, efficient, token-respectful;
+(3) all 36 tiles fused seamlessly into one apparent scene with LOD;
+(4) interactive pleasing flyover in Unreal Engine; (5) the entire tiled model
+into Blender for rendering — at FULL quality, no decimation unless the machine
+literally crashes, and any forced step-down comes to Joel with numbers first.
+The lead's six, as amended by Joel: (6) one canary gates every fleet, at every
+scale (train/UE/Blender/flyover); (7) machines verify geometry, Joel's eye
+judges beauty — and any quality/time/money tradeoff is ASKED first, never
+decided silently in either direction; (8) every meter guarded by machinery,
+budget position stated at every phase gate; (9) right-size every asset to its
+destination (archival full-count masters; UE full-count via NanoGS internal
+LOD; web SOG; Blender full-count per principle 5); (10) ground truth written
+the moment it happens; (11) continuous operation until complete — every
+machine always has a next assignment, heartbeat lanes.json updated at every
+stage change, hand-offs fire themselves, human gates never idle the machines.
+
+## Lessons — 2026-07-21 session (pilot verdict + comparison tooling)
+
+- **Detached training on Skychief: Start-Process orphans DIE when the ssh
+  session closes** (~40 s, silent, no error). The proven route is a scheduled
+  task registered -LogonType S4U **by the account's SID, not name** (the
+  Microsoft-account name `WORKGROUP\joel pc login` fails SID mapping). The
+  fleet driver must launch every local train this way; survival is verified
+  from a fresh connection.
+- **LichtFeld doubles as a matched-view renderer** (recipe + traps in the
+  field manual ch07): --init + --iter=1 + --timelapse-images (=-attached form
+  only) renders named dataset cameras in seconds. Traps: mcmc's DEFAULT
+  1M cap silently subsamples big models (set --max-cap ≥ model count; check
+  "Final splats", no "Choosing randomly"); --iter=0 loads but renders
+  NOTHING; 18M at 8192 OOMs a 24 GB card (optimizer state ~12 GB even for
+  1 iter) — color-faithful fallback is lower --max-width, LABELED wherever
+  compared against native renders.
+- **Comparison methodology:** render at the native supervision width and give
+  every column identical downsample treatment — a low-res rasterization next
+  to a supersampled photo downscale systematically flatters the photo (Joel
+  caught this by eye). Detail judgments live in 1:1 crops from one shared box.
+- **The two solves do NOT co-register on screen** — the 300ft-solve tile
+  renders hugely displaced through combined-solve cameras (landmarks moved
+  hundreds of 8K pixels). Never mix tiles from different solves in one scene;
+  the rebuild exists partly to end mixed-solve seams.
+- **Why 18M ≠ better (for the record):** detail is data-limited — capacity
+  past the multi-view-consistent information adds redundant overlapping
+  splats that render identically. Density's only untested edge is extreme
+  close range; Joel judged the live scenes and closed that question too.
+
 ## Hard-won rules that bind every job here
 
 - Feed LichtFeld JPEG q95 from the PC's local NVMe (`C:\oak_resized6\`),

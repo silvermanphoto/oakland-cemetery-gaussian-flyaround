@@ -12,11 +12,14 @@ grounds empty.
 Three and a half years later, those photographs became this: a set of
 gaussian-splat reconstructions you can spin around in a browser, built as
 nine tiles that share one camera solve, plus a fused whole-site model.
-The current work is pushing it further — finer tiles trained at the
-photographs' native resolution, dense enough to read the stones, ending in
-a walkable open-world build in a game engine.
+The current work is pushing it further. A finer 6×6 cut — 36 tiles trained
+at the photographs' full native resolution — is now live, and a second
+flight from that winter (a low-altitude pass with the same camera) has been
+fused into the solve, sharpening the ground truth for the next generation
+of tiles. It ends in a walkable open-world build in a game engine.
 
-The live scenes are listed in [docs/LIVE_URLS.md](docs/LIVE_URLS.md).
+The live scenes are listed in [docs/LIVE_URLS.md](docs/LIVE_URLS.md) and
+the 36-tile set in [docs/LIVE_URLS_36_tiles.md](docs/LIVE_URLS_36_tiles.md).
 Start with the center tile: the Confederate Obelisk sits at its orbit
 center, which is no accident.
 
