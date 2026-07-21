@@ -104,10 +104,15 @@ the pilot; the footage is razor sharp — no reference-frame ceremony needed).
 
 ## BOUNDARY CUT — Joel's directive, 2026-07-21 (binding for assembly + all deliverables)
 
-The final world is cut HARD at Oakland Cemetery's real boundary (walls), sourced
-from OpenStreetMap: the cemetery floats in black space. EXCEPTION: keep the
-entire railway corridor alongside the cemetery (the rail line on the north
-edge). Implementation: georegister the solve frame to world coordinates via
+The final world floats in black space, cut HARD at a keep-region defined
+(Joel, refined 2026-07-21): the cemetery (inside its walls) PLUS the ENTIRE
+ring of surrounding streets on every side — out to the far edge of the
+sidewalk "across the street" — including the full railway bundle on the north
+edge and the road strip beyond it. NO BUILDINGS outside the cemetery walls are
+kept: subtract every OSM building footprint outside the walls from the keep
+region, even where it touches the street band. (Joel: "in every case, i want
+the entire road around the cemetery all the way to the sidewalk across the
+street from the cemetery, but no buildings outside the cemetery walls kept.") Implementation: georegister the solve frame to world coordinates via
 drone GPS EXIF from the ORIGINAL source JPEGs (the 8192 pool re-encodes may
 have stripped EXIF) fitted against solve camera centers; transform the OSM
 polygon into model coordinates; apply as a point-in-polygon gaussian filter at
