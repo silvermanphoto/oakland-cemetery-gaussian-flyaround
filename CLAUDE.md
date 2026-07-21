@@ -102,6 +102,18 @@ import, so UE tile actors take an IDENTITY transform. Pilot = `tile_3_2`
 Quality gate: judged by eye against the source frames' sharpness (Joel was
 the pilot; the footage is razor sharp — no reference-frame ceremony needed).
 
+## BOUNDARY CUT — Joel's directive, 2026-07-21 (binding for assembly + all deliverables)
+
+The final world is cut HARD at Oakland Cemetery's real boundary (walls), sourced
+from OpenStreetMap: the cemetery floats in black space. EXCEPTION: keep the
+entire railway corridor alongside the cemetery (the rail line on the north
+edge). Implementation: georegister the solve frame to world coordinates via
+drone GPS EXIF from the ORIGINAL source JPEGs (the 8192 pool re-encodes may
+have stripped EXIF) fitted against solve camera centers; transform the OSM
+polygon into model coordinates; apply as a point-in-polygon gaussian filter at
+the ASSEMBLY stage (training keeps its aprons — the cut is delivery-side).
+Affects: fused scene, UE world, Blender reel, web scenes.
+
 ## The eleven principles (Joel + lead, locked 2026-07-21 — govern the rebuild)
 
 Joel's five: (1) video-game level — the finest splat the software and photo
