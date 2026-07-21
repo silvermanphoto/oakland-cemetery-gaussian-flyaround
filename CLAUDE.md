@@ -69,6 +69,20 @@ edges on retrained tiles — bug found+fixed 2026-07-19, canonical fix in
 scripts/export_ue_tiles.ps1). Visual verification (seams, fps, flythrough)
 still pending an interactive session — next per the UE plan.
 
+## PILOT VERDICT — Joel, 2026-07-21 (binding for the rebuild)
+
+Three-way matched comparison (docs/comparisons/, full-res in fullsize_13/) judged
+by Joel and independently by the lead, same ranking: the combined 300ft+125ft
+solve beats the 300ft-only model DECISIVELY at equal density; the 18M "high"
+model is NOT better than the 12M "matched" (Joel: "the 12m matched scene is
+just as good as 18m. The high version is not better"). FLEET RECIPE therefore:
+**combined solve, 12M gaussian cap, native 8192, mrnf, SFM-sparse init** —
+the 18M tier is ruled out (its only effect was cost: bigger cards, longer runs,
+heavier files). Why density didn't help: detail is data-limited, not
+capacity-limited — 12M already spends all multi-view-consistent information in
+these photos; the remaining softness is view-inconsistent micro-texture that
+averaging cannot recover at any splat count.
+
 ## The hyperreal plan (docs/HYPERREAL_PLAN.md is the full text)
 
 Continue-train the existing tiles — never restart: subdivide 3×3 → 6×6 (or
