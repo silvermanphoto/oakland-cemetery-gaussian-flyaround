@@ -112,7 +112,15 @@ drone GPS EXIF from the ORIGINAL source JPEGs (the 8192 pool re-encodes may
 have stripped EXIF) fitted against solve camera centers; transform the OSM
 polygon into model coordinates; apply as a point-in-polygon gaussian filter at
 the ASSEMBLY stage (training keeps its aprons — the cut is delivery-side).
-Affects: fused scene, UE world, Blender reel, web scenes.
+Affects: fused scene, UE world, Blender reel, web scenes. Prep DONE 2026-07-21
+(docs/boundary_cut/): georegistration confirmed sub-meter (median 0.23 m — the
+solve was already GPS-georeferenced by RealityScan); OSM area check 48.3 acres
+(0.7%); keep-polygon written. LEAD'S GATE for the cut stage: the polygon was
+fit in the 300ft-solve frame; the v2 tiles live in the combined-solve frame —
+the two agree horizontally to sub-meter (the big on-screen offset between
+solves is the ~2.4 m GROUND-HEIGHT difference, -9 vs -11.4, which a horizontal
+cut ignores) but RE-VERIFY the combined solve's own georeference (GPS vs its
+300ft-block camera centers) before cutting a single gaussian.
 
 ## The eleven principles (Joel + lead, locked 2026-07-21 — govern the rebuild)
 
