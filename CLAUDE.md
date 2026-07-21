@@ -112,7 +112,13 @@ edge and the road strip beyond it. NO BUILDINGS outside the cemetery walls are
 kept: subtract every OSM building footprint outside the walls from the keep
 region, even where it touches the street band. (Joel: "in every case, i want
 the entire road around the cemetery all the way to the sidewalk across the
-street from the cemetery, but no buildings outside the cemetery walls kept.") Implementation: georegister the solve frame to world coordinates via
+street from the cemetery, but no buildings outside the cemetery walls kept.")
+DESIGN RATIONALE (Joel, 2026-07-21) — the standing test for every ambiguous
+cut decision: avoid the "cut out by scissors" look. Cuts must land on the
+city's own seams (curb lines, pavement edges, building faces), never through
+the middle of urban fabric — the cemetery reads as a complete artifact on its
+street plinth. When a boundary call is ambiguous, choose the edge that reads
+as a natural urban seam. Implementation: georegister the solve frame to world coordinates via
 drone GPS EXIF from the ORIGINAL source JPEGs (the 8192 pool re-encodes may
 have stripped EXIF) fitted against solve camera centers; transform the OSM
 polygon into model coordinates; apply as a point-in-polygon gaussian filter at
