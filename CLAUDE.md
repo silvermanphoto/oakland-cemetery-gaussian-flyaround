@@ -122,6 +122,24 @@ solves is the ~2.4 m GROUND-HEIGHT difference, -9 vs -11.4, which a horizontal
 cut ignores) but RE-VERIFY the combined solve's own georeference (GPS vs its
 300ft-block camera centers) before cutting a single gaussian.
 
+## BLENDER LANE — measured truths (canary 2026-07-21)
+
+- KIRI 5.0.0 requires Blender 5.1 (extension, cp313 wheels) — 4.5 is a dead
+  end. Blender 5.1.2 installed on Skychief; KIRI installs via the EXTENSIONS
+  system; import operator sna.dgs_render_import_ply_e0a3a.
+- Import slope measured: ~2.2 GB RAM and ~12 s per million gaussians (7.9M
+  tile = 17.7 GB, clean). Import ceiling on 64 GB Skychief ≈ 22M ≈ 2-4 average
+  tiles resident. Full 135.7M model = ~300 GB = confirmed crash.
+- HARD BLOCKER: no Blender splat addon can render HEADLESS — splats draw only
+  through GPU viewport/offscreen pipelines and Blender disables all GPU drawing
+  in --background (KIRI geometry nodes evaluate to 0 faces; renders are blank).
+  SplatForge and BlendSplat share the same wall — do NOT buy SplatForge for
+  headless automation ($49 answers a question we no longer have).
+- Consequence: Blender splat rendering requires a GUI session with a live GPU
+  context. Options pending Joel: automate a console GUI session on Skychief
+  (autologin + GUI automation; RDP may not bind the 3090 for GL) or do the
+  Blender reel interactively and let UE carry the seamless-world goal.
+
 ## The eleven principles (Joel + lead, locked 2026-07-21 — govern the rebuild)
 
 Joel's five: (1) video-game level — the finest splat the software and photo
