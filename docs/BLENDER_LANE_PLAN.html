@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blender Lane Plan — Oakland Cemetery Gaussian Flyaround (26-029)</title>
+<style>
+  :root { --ink:#1c1b19; --soft:#5c5b57; --line:#e4e0d8; --accent:#74c4a4; --warn:#c0642a; --bg:#faf8f4; --card:#fff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+  .wrap { max-width:960px; margin:0 auto; padding:40px 22px 80px; }
+  h1 { font-size:30px; line-height:1.15; margin:0 0 4px; }
+  h2 { font-size:21px; margin:38px 0 10px; padding-bottom:6px; border-bottom:2px solid var(--line); }
+  h3 { font-size:17px; margin:22px 0 6px; }
+  .sub { color:var(--soft); font-size:14px; margin:0 0 8px; }
+  p { margin:10px 0; }
+  code { background:#f0ede6; padding:1px 5px; border-radius:4px; font-size:13px; }
+  pre { background:#f4f1ea; border:1px solid var(--line); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:13px; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; display:block; overflow-x:auto; }
+  th,td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#f0ede6; }
+  .verdict { background:var(--card); border:1px solid var(--line); border-left:5px solid var(--accent);
+    border-radius:10px; padding:18px 20px; margin:18px 0; }
+  .verdict.no { border-left-color:var(--warn); }
+  .tag { display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:20px; }
+  .yes { background:#e2f3ec; color:#1f6b4d; }
+  .nope { background:#f7e6da; color:#9a3e12; }
+  .big { font-size:19px; font-weight:600; }
+  ul { margin:8px 0 8px 2px; padding-left:20px; }
+  li { margin:5px 0; }
+  .muted { color:var(--soft); font-size:13px; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e9e6df; --soft:#a8a49a; --line:#33322e; --bg:#181713; --card:#201f1a; }
+    code { background:#2a2925; } pre { background:#201f1a; } th { background:#26251f; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Blender Lane Plan</h1>
+<p class="sub">Oakland Cemetery Gaussian Flyaround (26-029) &middot; verified 2026-07-21 &middot; staging only, no GPU touched (training in flight)</p>
+
+<div class="verdict no">
+  <p class="big"><span class="tag nope">Principle 5, literally</span> &nbsp;All 36 tiles in one Blender scene at full quality = <strong>not possible on Skychief — it would crash.</strong></p>
+  <p>The 36 tiles are <strong>135.7 million gaussians</strong> at full degree-3 color. That is <strong>~32 GB of video memory</strong> for the raw data alone against the RTX 3090's <strong>24 GB</strong> — the color coefficients by themselves (~24 GB) fill the whole card. In system RAM the add-ons expand it to 68–170 GB against 64 GB. And no Blender add-on is even built to hold that many (free ones: a few million; paid one's own manual: crashes past ~16 M). This is exactly the "machine literally crashes" case the principle says to bring to you with numbers.</p>
+</div>
+
+<div class="verdict">
+  <p class="big"><span class="tag yes">Achievable</span> &nbsp;Full quality — no gaussian ever decimated — via <strong>per-shot region rendering.</strong></p>
+  <p>The flyaround is a moving camera. Render it shot by shot: each shot loads only the <em>full-count</em> tiles its camera actually sees, renders those frames at full degree-3 color, frees them, moves on. Every rendered frame is full quality; off-screen or far tiles are simply not loaded (runtime level-of-detail — principle 3), which is <em>not</em> the permanent gaussian loss principle 5 forbids. The canary measures how many tiles fit per shot so the shot list is built from real numbers.</p>
+</div>
+
+<h2>Recommendation</h2>
+<p><strong>Canary <a href="https://github.com/Kiri-Innovation/3dgs-render-blender-addon">KIRI 3DGS Render</a> first (free), render the flyaround per-shot.</strong> KIRI is the only candidate that renders splats through real <strong>Cycles</strong> — genuine path-traced light, depth of field, motion blur, compositing — at <strong>full degree-3 color</strong>. It is free and reputable, so the canary costs nothing but a GPU gap. Its weakness is scale (each gaussian becomes a mesh face, happiest ~2–3 M), which the canary measures and which per-shot rendering accommodates.</p>
+
+<h3>Paid options — surfaced for your call, you buy (never me)</h3>
+<ul>
+  <li><strong>SplatForge — $49 one-time.</strong> Worth it <em>if</em> the KIRI canary proves KIRI too heavy per tile and you want a fast, faithful splat-look flyaround rather than a path-traced one. Full degree-3 color, highest documented ceiling (~16 M/scene), built-in animation export — but no in-Blender lighting/DoF/motion-blur (add in comp). Buy only after the free canary, and verify its ceiling on our data first (its store says "100 M", its own manual says "16 M then crash" — trust the manual).</li>
+  <li><strong>Cloud GPU (48 GB A6000, ~$0.33/hr).</strong> Raises the memory wall so bigger shots fit, but <em>not</em> the add-on wall — it does not, by itself, buy the literal all-36 render. For "one seamless world" the right tool is the Unreal/NanoGS path you already have; Blender's job is the beautiful rendered reel.</li>
+</ul>
+<p><strong>Install target: Blender 4.5 LTS</strong> (free, blender.org; supported to 2027; covers all three add-ons). Skychief has only 3.0 and 3.4 today — an install is required (listed, not done).</p>
+
+<h2>The renderer candidates (verified 2026-07-21)</h2>
+<table>
+<tr><th>Add-on</th><th>Price</th><th>Renders via</th><th>Degree-3 color?</th><th>Real ceiling</th><th>Fit</th></tr>
+<tr><td><strong>KIRI 3DGS Render</strong> v5.0.0<br><span class="muted">Apache-2.0</span></td><td><strong>Free</strong></td><td>Mesh-face per gaussian → real <strong>Cycles + EEVEE</strong></td><td><span class="tag yes">Yes</span> deg-3 + toggle</td><td>~2–3 M comfortable; points-proxy for big files</td><td>Best beauty; lowest count ceiling</td></tr>
+<tr><td><strong>SplatForge</strong></td><td><strong>$49</strong></td><td>GLSL shader overlay (splats <em>not</em> scene-lit)</td><td><span class="tag yes">Yes</span> deg-3</td><td>~16 M/scene then crash (own docs); no LOD/stream</td><td>Highest ceiling + full color; no lighting/DoF/MB</td></tr>
+<tr><td><strong>BlendSplat</strong></td><td><strong>Free</strong></td><td>Geo-nodes + EEVEE</td><td><span class="tag nope">No — deg-2</span> (color step-down)</td><td>"millions"; no stated cap</td><td>Relight+DoF+MB free, but degree-2 compromise</td></tr>
+<tr><td>Blender <strong>native</strong></td><td>Free (future)</td><td>design task #159470 only</td><td>planned</td><td>not shipped</td><td>Watch; not usable now</td></tr>
+</table>
+<p class="muted">SkySplat and Gauss Cannon keep appearing but are splat-<em>generation</em> / camera-path tools, not renderers — out of scope.</p>
+
+<h2>Memory arithmetic</h2>
+<table>
+<tr><th>Scope</th><th>Gaussians</th><th>VRAM (full color)</th><th>Verdict on 24 GB</th></tr>
+<tr><td>Average tile</td><td>3.77 M</td><td>0.89 GB</td><td>fine</td></tr>
+<tr><td>Largest tile (tile_1_4)</td><td>7.90 M</td><td>1.86 GB</td><td>fine</td></tr>
+<tr><td><strong>All 36</strong></td><td><strong>135.7 M</strong></td><td><strong>32.0 GB</strong></td><td><span class="tag nope">over the card</span></td></tr>
+</table>
+<p>All-36 = ~32 GB VRAM (over 24 GB) and 68–170 GB RAM in the add-on (over 64 GB). A shot's worth of tiles fits comfortably; the real per-shot count is add-on-bound and is what the canary measures. Linked collections help <em>organization</em> but Blender does not page them out of core — the lazy mechanism is load-subset → render → purge → next shot.</p>
+
+<h2>The canary (staged, not run)</h2>
+<p>Written and staged on Skychief at <code>C:\blender_lane\</code> (mirrored in this repo at <code>docs/blender_lane/</code>). It <strong>self-guards on a GPU gap</strong> — it will not run while training is in flight (right now it would correctly abort: only 4.7 GB VRAM free).</p>
+<ul>
+  <li><strong>run_canary.ps1</strong> — GPU-gap guard, Blender locator (errors to the install step if only 3.0/3.4 present), a 2-second RAM+VRAM sampler for true peaks, and a hard timeout-kill so a runaway import ends as a clean killed process + full log (the crash-recovery path — crashing on a too-big import is an <em>expected</em> canary outcome).</li>
+  <li><strong>canary.py</strong> — installs+enables KIRI headless, logs the add-on's real operator names, imports one tile, frames an oblique aerial camera (the "start inside the sweet spot" rule for an aerial capture), renders one EEVEE + one Cycles frame, writes counts + timings.</li>
+</ul>
+<p>Map the curve across three tiles in one gap: <code>tile_0_5</code> (0.19 M), <code>tile_3_2</code> (4.3 M, obelisk cell), <code>tile_1_4</code> (7.90 M, the stress test). Tiles live on Skychief at <code>H:\2026 Files\26-002 Oakland Cemetery Splat\deliver\ue_tiles\</code>.</p>
+<pre>powershell -NoProfile -ExecutionPolicy Bypass -File C:\blender_lane\run_canary.ps1 `
+    -Tile "H:\2026 Files\26-002 Oakland Cemetery Splat\deliver\ue_tiles\tile_1_4.ply" -Engine EEVEE</pre>
+<p><strong>Canary passes when:</strong> the largest tile imports without crashing, peak RAM stays well under 64 GB and peak VRAM under ~22 GB, the viewport is interactive enough to camera-animate, and both an EEVEE and a Cycles frame render out looking like the cemetery. Those five numbers size the shot list.</p>
+
+<h2>Open risks</h2>
+<ul>
+  <li><strong>KIRI's real per-tile ceiling on 24 GB is unmeasured</strong> — the single biggest unknown, and why the canary exists. A 4–8 M tile may need points-proxy or Cycles-only-for-final.</li>
+  <li><strong>SplatForge 16 M vs 100 M</strong> — primary-source-vs-marketing contradiction; verify on our data before paying $49.</li>
+  <li><strong>BlendSplat is degree-2</strong> — a view-dependent-color step-down on our degree-3 tiles; your call, not chosen silently.</li>
+  <li><strong>Headless operators</strong> — these add-ons are GUI-first; the canary discovers and logs the real operator names and fails loudly, so we learn the true API on the first cheap run.</li>
+  <li><strong>Blender 5.2</strong> — if you'd rather stay on the current 5.2 LTS, KIRI only offers an "untested, likely buggy" 5.2 patch (also staged). 4.5 LTS or 5.1 avoids that.</li>
+</ul>
+
+<p class="muted" style="margin-top:34px">Full detail and sources in <code>BLENDER_LANE_PLAN.md</code> (same folder). Canary scripts in <code>docs/blender_lane/</code> and on Skychief <code>C:\blender_lane\</code>.</p>
+
+</div>
+</body>
+</html>
