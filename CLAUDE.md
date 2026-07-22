@@ -166,12 +166,13 @@ Camera framing FIXED (up=-Y derived empirically + 2-98 percentile aim box)
 — beautiful frames proven on Skychief. MAC STATUS (2026-07-22, Joel's Blender
 5.2.0 LTS + KIRI 5.2-patch build): scene delivery works (packed 2.24 GB
 .blend at blender_scene/, sha-verified); KIRI's OWN Advanced Render is
-CORRECT on 5.2/arm64 (~8.5 s/720p frame on the M4 Max) — but the live
-VIEWPORT preview has a flipped view-direction color bug (dark from above,
-glowing from below; the author's known-untested 5.2 patch), and plain
-EEVEE/Cycles render BLANK (geometry nodes feed them 0 faces, same as
-headless Windows). Workflow on the Mac: compose via viewport geometry,
-output via KIRI Advanced Render. scipy has no arm64 wheel — lazy import,
+CORRECT on 5.2/arm64 (~8.5 s/720p frame on the M4 Max), and the live
+VIEWPORT is ALSO correct — the earlier "dark from above" was NOT a color
+bug: it was the un-hidden CARRIER MESH (4.3M bare quads) occluding the
+painted overlay. HIDE THE SOURCE MESH (hide_set) and the viewport draws
+true color; the .blend is saved with the mesh hidden so it opens clean.
+Plain EEVEE/Cycles still render BLANK (geometry nodes feed them 0 faces,
+same as headless Windows) — output goes through KIRI Advanced Render. scipy has no arm64 wheel — lazy import,
 harmless. Machinery is done on both machines. Superseded text follows for history: automate a console GUI session on Skychief
   (autologin + GUI automation; RDP may not bind the 3090 for GL) or do the
   Blender reel interactively and let UE carry the seamless-world goal.
