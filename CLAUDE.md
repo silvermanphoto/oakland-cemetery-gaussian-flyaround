@@ -302,6 +302,18 @@ envelope exceeds the card, do not launch — rent the bigger card (48 GB A6000,
 ~$0.33/hr, fits 18M native with room) or surface the constraint to Joel. A
 failure predictable from our own logs is never bought twice.
 
+**AUTO-ESCALATION RULE (Joel, 2026-07-22, standing):** any cell that runs a
+card out of memory auto-routes to the next card class up (48 GB -> 80 GB
+lane) WITHOUT waiting for approval — a doomed retry or a lane waiting on a
+human is idle compute. Guardrails remain absolute: per-class price caps
+(80 GB <= $1.80/hr; above that class or an empty market -> escalate to Joel),
+the $15 balance floor halts all new launches, every pod carries the dead-man
+bring-up watchdog + the pod-side idle self-guard, one attempt per card class
+(never retry the same class on the same cell), and the vacated card
+immediately claims the next queue cell. Measured density rate so far: 3 of
+the first 6 combined-solve cells are dense-class — budget projections must
+use the LIVE rate, not the pre-fleet estimate.
+
 **2. Every meter gets machinery, not attention.** The three billing rules
 (verify the external name read-only BEFORE the first billable second; dead-man's
 switch keyed to a REAL login, auto-kill past deadline; never idle with an
