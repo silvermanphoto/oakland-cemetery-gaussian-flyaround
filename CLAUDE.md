@@ -203,8 +203,11 @@ VIEWPORT is ALSO correct — the earlier "dark from above" was NOT a color
 bug: it was the un-hidden CARRIER MESH (4.3M bare quads) occluding the
 painted overlay. HIDE THE SOURCE MESH (hide_set) and the viewport draws
 true color; the .blend is saved with the mesh hidden so it opens clean.
-WHOLE-SITE .BLEND CONVENTIONS (2026-07-22 evening): the delivered
-oakland_whole_site.blend is now BLENDER-CONVENTIONAL — everything (chunks,
+WHOLE-SITE .BLEND CONVENTIONS (2026-07-22 evening): the delivered scene —
+RENAMED per Joel to "2026 Oakland Splat Blender v1.blend" (blender_scene/;
+true mv, no copy; both multi-GB .blend1 auto-backups deleted; if a save ever
+recreates a .blend1 duplicate, delete it — Joel wants no 4 GB dupes) — is
+BLENDER-CONVENTIONAL — everything (chunks,
 proxies, camera) is parented to an "Oakland_Root" empty rotated -90 deg X, so
 Z is up and Top/Front/Side views behave normally (rotate the ROOT, never the
 chunks; re-run the KIRI refresh after any root transform — the display
