@@ -194,7 +194,13 @@ VIEWPORT is ALSO correct — the earlier "dark from above" was NOT a color
 bug: it was the un-hidden CARRIER MESH (4.3M bare quads) occluding the
 painted overlay. HIDE THE SOURCE MESH (hide_set) and the viewport draws
 true color; the .blend is saved with the mesh hidden so it opens clean.
-Plain EEVEE/Cycles still render BLANK (geometry nodes feed them 0 faces,
+WHOLE-SITE SCENE PATH (proven 2026-07-22): KIRI's import hangs on a single
+PLY somewhere above ~5.15M gaussians (loads ~34 GB then never returns — not
+OOM, not disk). Whole-site scenes therefore import as ~4M-gaussian CHUNKS
+(split_ply.py, contiguous slices, SH-preserved) — 4x4M imported in 16-48 s
+each where 1x16M hung forever. Decimation of huge PLYs: splat-transform's
+merge phase is IO-bound and can look stalled for ~25 min — trust the job's
+own EXITCODE/log lines, never process-CPU heuristics. Plain EEVEE/Cycles still render BLANK (geometry nodes feed them 0 faces,
 same as headless Windows) — output goes through KIRI Advanced Render. scipy has no arm64 wheel — lazy import,
 harmless. Machinery is done on both machines. STANDING RULE (Joel, 2026-07-22, expectation corrected same day): a
 "Blender scene" deliverable means the WHOLE CEMETERY by default — partial or
