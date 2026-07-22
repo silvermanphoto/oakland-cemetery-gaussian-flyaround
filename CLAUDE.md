@@ -188,7 +188,13 @@ painted overlay. HIDE THE SOURCE MESH (hide_set) and the viewport draws
 true color; the .blend is saved with the mesh hidden so it opens clean.
 Plain EEVEE/Cycles still render BLANK (geometry nodes feed them 0 faces,
 same as headless Windows) — output goes through KIRI Advanced Render. scipy has no arm64 wheel — lazy import,
-harmless. Machinery is done on both machines. STANDING RULE (Joel, 2026-07-22):
+harmless. Machinery is done on both machines. STANDING RULE (Joel, 2026-07-22, expectation corrected same day): a
+"Blender scene" deliverable means the WHOLE CEMETERY by default — partial or
+preview scenes only when explicitly framed as such, with the scope in the
+FILENAME (he opened a north-edge preview expecting the full site). Whole-site
+interactive scenes use the crash-exception reduction (measured ceiling ~16M
+on his Mac) cut-first-then-decimate; full quality stays the render farm's
+per-shot job. Also STANDING RULE (Joel, 2026-07-22):
 every Blender scene delivered to him ships with the carrier/source mesh
 HIDDEN (hide_set) and is SAVED in that state — never show the scaffold. Superseded text follows for history: automate a console GUI session on Skychief
   (autologin + GUI automation; RDP may not bind the 3090 for GL) or do the
