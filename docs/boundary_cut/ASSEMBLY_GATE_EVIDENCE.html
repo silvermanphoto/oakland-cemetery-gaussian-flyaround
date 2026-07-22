@@ -1,0 +1,142 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oakland boundary cut — assembly pre-gate</title>
+<style>
+ body{font-family:'Gill Sans','Futura',Lato,-apple-system,sans-serif;max-width:960px;margin:0 auto;padding:28px 22px;color:#232323;background:#fff;line-height:1.5}
+ h1{font-size:26px;margin:0 0 4px} h2{font-size:19px;margin:30px 0 8px;border-bottom:1px solid #e6e2d8;padding-bottom:4px}
+ .verdict{display:inline-block;background:#fbe9e7;color:#b3261e;font-weight:700;padding:6px 14px;border-radius:6px;font-size:18px;margin:8px 0}
+ .sub{color:#777;font-size:14px;margin:0 0 14px}
+ table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0} th,td{border:1px solid #e2ded4;padding:6px 9px;text-align:right} th{background:#f6f3ec;text-align:right} td:first-child,th:first-child{text-align:center}
+ .note{background:#f7f5ef;border-left:4px solid #74c4a4;padding:10px 14px;border-radius:0 6px 6px 0;margin:12px 0}
+ figure{margin:16px 0} figcaption{font-size:13px;color:#666;margin-top:4px}
+ code{background:#f2efe8;padding:1px 5px;border-radius:3px;font-size:13px}
+ p{margin:8px 0}
+</style></head><body>
+<h1>Oakland Cemetery boundary cut — assembly pre-gate</h1>
+<p class="sub">Combined-solve georeference re-verification &middot; 2026-07-22 &middot; verification only, no gaussians cut &middot; flagged for the lead's review</p>
+<div class="verdict">VERDICT: FAIL — re-express the outline before cutting</div>
+
+<p>The keep outline (Joel's hand-traced boundary) was turned into map coordinates using <b>one</b> photo set — the
+300-foot oblique flight. The 3D tiles now waiting to be cut are built in a <b>different</b>, independently-computed
+coordinate system: the combined 300-foot <b>+</b> 125-foot solve. Each system is, on its own, accurately pinned to
+GPS (both within ~0.2&nbsp;m of the drone's recorded positions) — but they are pinned <b>independently</b>, so
+relative to each other they sit at a slight angle and scale (<b>~1.22° rotation, 0.66% scale</b>, plus a few-metre shift).</p>
+<p>Carried across that gap, the outline's 13 corners land <b>5.9–21.2&nbsp;metres</b>
+out of place. The recorded gate expected sub-metre agreement; the reality is up to a car-length-and-a-half of error,
+which would delete real cemetery on the north-east side and keep non-cemetery ground elsewhere.</p>
+<div class="note"><b>The fix is prepared:</b> <code>boundary_keep_polygon_FINAL_c2.json</code> is the same outline
+re-expressed in the tiles' own coordinate system — every corner in the right place, same acreage and shape. Offered
+for the lead to bless; not self-approved.</div>
+
+<figure><svg viewBox="0 0 900 720" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;background:#fbfaf7">
+<rect x="0" y="0" width="900" height="720" fill="#fbfaf7"/>
+<path d="M65.5,469.1 L64.3,238.4 L83.2,231.5 L82.5,229.6 L124.4,214.2 L122.0,207.5 L116.4,192.3 L105.1,196.5 L74.4,207.8 L73.3,204.8 L64.2,208.1 L64.2,206.9 L62.7,173.7 L154.0,162.6 L471.3,60.0 L512.8,115.6 L579.9,263.3 L608.8,297.1 L711.3,408.8 L720.5,417.0 L718.1,419.7 L721.6,422.9 L724.3,422.9 L725.6,425.1 L729.5,425.0 L737.4,432.2 L737.4,433.8 L735.5,434.5 L739.1,437.5 L740.9,435.3 L762.4,454.5 L762.3,454.6 L769.2,462.0 L770.8,462.1 L773.5,464.5 L787.8,476.5 L785.5,476.4 L785.4,480.3 L789.3,480.4 L789.2,488.8 L789.3,488.8 L790.2,488.8 L787.9,638.7 L60.0,625.5 L65.5,469.1 Z" fill="none" stroke="#b0641f" stroke-width="2" stroke-dasharray="7,5" opacity="0.9"/>
+<path d="M72.2,473.8 L76.0,241.6 L95.2,235.0 L94.5,233.1 L137.0,218.5 L134.7,211.8 L129.4,196.4 L117.9,200.3 L86.8,211.0 L85.8,207.9 L76.5,211.1 L76.5,209.9 L75.7,176.4 L167.8,167.3 L489.4,70.8 L529.9,127.6 L594.3,277.7 L622.6,312.3 L723.5,427.0 L732.5,435.4 L730.0,438.0 L733.5,441.3 L736.2,441.4 L737.5,443.6 L741.4,443.7 L749.2,451.1 L749.1,452.7 L747.2,453.4 L750.8,456.4 L752.6,454.2 L773.8,474.1 L773.8,474.1 L780.5,481.7 L782.1,481.8 L784.9,484.4 L799.0,496.7 L796.6,496.6 L796.5,500.6 L800.4,500.7 L800.1,509.1 L800.1,509.2 L801.1,509.2 L795.5,660.0 L63.3,631.0 L72.2,473.8 Z" fill="none" stroke="#1f6f47" stroke-width="2.4" opacity="0.95"/>
+<line x1="60.0" y1="625.5" x2="69.9" y2="642.1" stroke="#c0392b" stroke-width="2"/>
+<circle cx="60.0" cy="625.5" r="3.2" fill="#b0641f"/>
+<circle cx="69.9" cy="642.1" r="2.6" fill="#c0392b"/>
+<text x="66.0" y="619.5" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">1: 5.9 m</text>
+<line x1="65.5" y1="469.1" x2="85.6" y2="483.1" stroke="#c0392b" stroke-width="2"/>
+<circle cx="65.5" cy="469.1" r="3.2" fill="#b0641f"/>
+<circle cx="85.6" cy="483.1" r="2.6" fill="#c0392b"/>
+<text x="71.5" y="463.1" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">2: 7.5 m</text>
+<line x1="64.2" y1="206.9" x2="101.2" y2="215.8" stroke="#c0392b" stroke-width="2"/>
+<circle cx="64.2" cy="206.9" r="3.2" fill="#b0641f"/>
+<circle cx="101.2" cy="215.8" r="2.6" fill="#c0392b"/>
+<text x="70.2" y="200.9" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">3: 11.6 m</text>
+<line x1="62.7" y1="173.7" x2="101.8" y2="181.9" stroke="#c0392b" stroke-width="2"/>
+<circle cx="62.7" cy="173.7" r="3.2" fill="#b0641f"/>
+<circle cx="101.8" cy="181.9" r="2.6" fill="#c0392b"/>
+<text x="68.7" y="167.7" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">4: 12.2 m</text>
+<line x1="154.0" y1="162.6" x2="195.5" y2="176.5" stroke="#c0392b" stroke-width="2"/>
+<circle cx="154.0" cy="162.6" r="3.2" fill="#b0641f"/>
+<circle cx="195.5" cy="176.5" r="2.6" fill="#c0392b"/>
+<text x="160.0" y="156.6" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">5: 13.4 m</text>
+<line x1="471.3" y1="60.0" x2="525.5" y2="92.4" stroke="#c0392b" stroke-width="2"/>
+<circle cx="471.3" cy="60.0" r="3.2" fill="#b0641f"/>
+<circle cx="525.5" cy="92.4" r="2.6" fill="#c0392b"/>
+<text x="477.3" y="54.0" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">6: 19.3 m</text>
+<line x1="512.8" y1="115.6" x2="564.2" y2="151.7" stroke="#c0392b" stroke-width="2"/>
+<circle cx="512.8" cy="115.6" r="3.2" fill="#b0641f"/>
+<circle cx="564.2" cy="151.7" r="2.6" fill="#c0392b"/>
+<text x="518.8" y="109.6" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">7: 19.2 m</text>
+<line x1="579.9" y1="263.3" x2="623.1" y2="306.5" stroke="#c0392b" stroke-width="2"/>
+<circle cx="579.9" cy="263.3" r="3.2" fill="#b0641f"/>
+<circle cx="623.1" cy="306.5" r="2.6" fill="#c0392b"/>
+<text x="585.9" y="257.3" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">8: 18.7 m</text>
+<line x1="608.8" y1="297.1" x2="650.3" y2="342.8" stroke="#c0392b" stroke-width="2"/>
+<circle cx="608.8" cy="297.1" r="3.2" fill="#b0641f"/>
+<circle cx="650.3" cy="342.8" r="2.6" fill="#c0392b"/>
+<text x="614.8" y="291.1" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">9: 18.9 m</text>
+<line x1="711.3" y1="408.8" x2="747.7" y2="463.3" stroke="#c0392b" stroke-width="2"/>
+<circle cx="711.3" cy="408.8" r="3.2" fill="#b0641f"/>
+<circle cx="747.7" cy="463.3" r="2.6" fill="#c0392b"/>
+<text x="717.3" y="402.8" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">10: 20.0 m</text>
+<line x1="773.5" y1="464.5" x2="807.5" y2="524.1" stroke="#c0392b" stroke-width="2"/>
+<circle cx="773.5" cy="464.5" r="3.2" fill="#b0641f"/>
+<circle cx="807.5" cy="524.1" r="2.6" fill="#c0392b"/>
+<text x="779.5" y="458.5" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">11: 20.9 m</text>
+<line x1="790.4" y1="478.6" x2="823.7" y2="539.5" stroke="#c0392b" stroke-width="2"/>
+<circle cx="790.4" cy="478.6" r="3.2" fill="#b0641f"/>
+<circle cx="823.7" cy="539.5" r="2.6" fill="#c0392b"/>
+<text x="796.4" y="472.6" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">12: 21.2 m</text>
+<line x1="787.9" y1="638.7" x2="810.8" y2="702.5" stroke="#c0392b" stroke-width="2"/>
+<circle cx="787.9" cy="638.7" r="3.2" fill="#b0641f"/>
+<circle cx="810.8" cy="702.5" r="2.6" fill="#c0392b"/>
+<text x="793.9" y="632.7" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">13: 20.7 m</text>
+<line x1="60" y1="646" x2="94" y2="646" stroke="#b0641f" stroke-width="3"/>
+<text x="102" y="650" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">stored outline — 300-foot frame (dashed orange)</text>
+<line x1="60" y1="666" x2="94" y2="666" stroke="#1f6f47" stroke-width="3"/>
+<text x="102" y="670" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">corrected outline — combined/tile frame (green)</text>
+<line x1="60" y1="686" x2="94" y2="686" stroke="#c0392b" stroke-width="3"/>
+<text x="102" y="690" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#333">corner shift, drawn ×3 for legibility (red)</text>
+<text x="60" y="36" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="17" font-weight="600" fill="#222">Keep-outline corner displacement: 300-foot frame &#8594; combined-solve frame</text>
+<text x="60" y="54" font-family="Gill Sans,Futura,Lato,sans-serif" font-size="13" fill="#666">North is up. Arrows show where each corner must move (magnified 3&#215;); labels are true metres. Max 21.2 m.</text>
+</svg><figcaption>North up. Red arrows show where each corner must move (drawn 3&times; for legibility); labels are true metres.</figcaption></figure>
+
+<h2>The two coordinate systems, side by side</h2>
+<p>Both fits use the identical method. The 300-foot fit was reproduced from scratch and matched the recorded
+transform to the last decimal, proving the method faithful before it is trusted on the combined solve.</p>
+<table>
+<tr><th style="text-align:left">quantity</th><th>300-foot-only (outline's frame)</th><th>combined 300+125 (tiles' frame)</th></tr>
+<tr><td style="text-align:left">scale (m / model unit)</td><td>0.999892</td><td>0.993345</td></tr>
+<tr><td style="text-align:left">rotation vs GPS north</td><td>-0.0017&deg;</td><td>1.2212&deg;</td></tr>
+<tr><td style="text-align:left">GPS-fit residual (median)</td><td><b>0.227 m</b></td><td><b>0.211 m</b></td></tr>
+<tr><td style="text-align:left">GPS-fit residual (p95 / max)</td><td>0.438 / 0.700 m</td><td>0.435 / 0.674 m</td></tr>
+<tr><td style="text-align:left">drone photos (inliers/total)</td><td>3270/3270</td><td>3270/3270</td></tr>
+</table>
+<p>Each solve is excellent on its own — neither is broken. They simply are not the <b>same</b> coordinate system, and
+the outline was built in only one of them. Frame difference (300-foot&nbsp;&rarr;&nbsp;combined): scale
+1.006591, rotation -1.2230&deg;, shift [8.15, -10.37]&nbsp;m.</p>
+
+<h2>Corner-by-corner displacement</h2>
+<table>
+<tr><th>#</th><th>latitude</th><th>longitude</th><th>stored X,Z (300-ft)</th><th>correct X,Z (combined)</th><th>displacement</th></tr>
+<tr><td>1</td><td>33.746767</td><td>-84.375220</td><td>(-291.1, -151.7)</td><td>(-288.1, -156.8)</td><td><b>5.92 m</b></td></tr>
+<tr><td>2</td><td>33.748060</td><td>-84.375166</td><td>(-286.1, -8.4)</td><td>(-280.0, -12.7)</td><td><b>7.49 m</b></td></tr>
+<tr><td>3</td><td>33.750227</td><td>-84.375179</td><td>(-287.3, 232.1)</td><td>(-276.0, 229.3)</td><td><b>11.63 m</b></td></tr>
+<tr><td>4</td><td>33.750502</td><td>-84.375193</td><td>(-288.6, 262.5)</td><td>(-276.7, 260.0)</td><td><b>12.21 m</b></td></tr>
+<tr><td>5</td><td>33.750593</td><td>-84.374290</td><td>(-204.9, 272.6)</td><td>(-192.2, 268.4)</td><td><b>13.39 m</b></td></tr>
+<tr><td>6</td><td>33.751441</td><td>-84.371151</td><td>(86.0, 366.7)</td><td>(102.6, 356.9)</td><td><b>19.30 m</b></td></tr>
+<tr><td>7</td><td>33.750982</td><td>-84.370740</td><td>(124.0, 315.8)</td><td>(139.8, 304.8)</td><td><b>19.20 m</b></td></tr>
+<tr><td>8</td><td>33.749761</td><td>-84.370076</td><td>(185.6, 180.3)</td><td>(198.8, 167.1)</td><td><b>18.68 m</b></td></tr>
+<tr><td>9</td><td>33.749481</td><td>-84.369791</td><td>(212.1, 149.4)</td><td>(224.8, 135.4)</td><td><b>18.89 m</b></td></tr>
+<tr><td>10</td><td>33.748558</td><td>-84.368776</td><td>(306.1, 46.9)</td><td>(317.2, 30.3)</td><td><b>20.01 m</b></td></tr>
+<tr><td>11</td><td>33.748098</td><td>-84.368160</td><td>(363.1, -4.2)</td><td>(373.5, -22.4)</td><td><b>20.95 m</b></td></tr>
+<tr><td>12</td><td>33.747981</td><td>-84.367994</td><td>(378.6, -17.0)</td><td>(388.7, -35.7)</td><td><b>21.22 m</b></td></tr>
+<tr><td>13</td><td>33.746658</td><td>-84.368019</td><td>(376.2, -163.9)</td><td>(383.3, -183.4)</td><td><b>20.72 m</b></td></tr>
+</table>
+<p><b>Maximum displacement 21.22 m</b> — every corner exceeds the 1 m pass threshold, the smallest by nearly six-fold.</p>
+
+<h2>Independent confirmation</h2>
+<p>To rule out an artefact, the two solves' shared 3,270 camera positions were aligned <b>directly to each other</b>,
+using no GPS at all. That returns the same frame difference (scale 1.006591, rotation -1.2230&deg;)
+and fits to a residual of about <b>0.03 m</b> — the two coordinate systems are related by an almost-perfect rigid
+rotation-and-scale. Two independent methods agreeing to the centimetre make the corner errors trustworthy and the
+corrected <code>_c2</code> outline exact.</p>
+
+<h2>Recommendation</h2>
+<p>The gate result is unambiguous. Cut the v2 tiles with <code>boundary_keep_polygon_FINAL_c2.json</code>, not the
+original. The correction is ready and independently checked; it awaits the lead's one-look nod (or a request for a
+visual overlay on a real tile) — it is not self-blessed.</p>
+</body></html>

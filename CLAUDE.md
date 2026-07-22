@@ -124,9 +124,17 @@ docs/boundary_cut/boundary_keep_polygon_FINAL.json: Joel's hand-traced
 minus 8 exterior buildings, with TWO PROTECTIONS Joel confirmed: the
 mis-tagged mausoleum at the north notch (osm 270494300 — drone-proven
 cemetery content) and the immaterial house sliver both KEPT; the 391 m2
-ne_b fringe outside his line goes to black (his line is authority). The
-assembly stage cuts with THIS polygon after the combined-solve
-georeference re-verification gate. Geometry decisions are CLOSED.
+ne_b fringe outside his line goes to black (his line is authority). ASSEMBLY GATE EXECUTED 2026-07-22 — VERDICT FAIL, CORRECTION BLESSED: the
+two solves differ by rotation 1.2230 deg + scale 1.006591 + shift [8.15,
+-10.37] m (NOT sub-meter as previously believed — that note was wrong);
+polygon corners displace 5.9-21.2 m in the combined frame. ALL combined-frame
+cutting uses docs/boundary_cut/boundary_keep_polygon_FINAL_c2.json (the
+FINAL polygon re-expressed via the measured transform; triple-verified:
+harness zero-error reproduction, 0.211 m GPS residual, 0.029 m GPS-free
+cross-check; evidence in ASSEMBLY_GATE_EVIDENCE.md/.html). The ORIGINAL
+_FINAL.json remains correct ONLY for 300ft-frame models (master_dense, v1
+tiles). Never cut a combined-frame model with the original. Geometry
+decisions remain CLOSED — this was a frame correction, not a shape change.
 Historical: AUTHORITATIVE FOOTPRINT (2026-07-22): Joel is supplying his own GeoJSON of
 the exact cemetery boundary — it SUPERSEDES the OSM way (proven ~2 acres
 short by the model's density evidence; see docs/boundary_cut/ v4). When his
