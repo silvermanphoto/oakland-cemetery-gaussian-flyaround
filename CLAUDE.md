@@ -118,7 +118,13 @@ cut decision: avoid the "cut out by scissors" look. Cuts must land on the
 city's own seams (curb lines, pavement edges, building faces), never through
 the middle of urban fabric — the cemetery reads as a complete artifact on its
 street plinth. When a boundary call is ambiguous, choose the edge that reads
-as a natural urban seam. NO-HOLES RULE (Joel, 2026-07-21, from his marked-up
+as a natural urban seam. AUTHORITATIVE FOOTPRINT (2026-07-22): Joel is supplying his own GeoJSON of
+the exact cemetery boundary — it SUPERSEDES the OSM way (proven ~2 acres
+short by the model's density evidence; see docs/boundary_cut/ v4). When his
+file lands: transform via georegistration_transform.json, compose with the
+standing pipeline (street band + rail + no-holes fill - exterior buildings),
+render one final overlay for his nod, then it becomes the cut polygon.
+NO-HOLES RULE (Joel, 2026-07-21, from his marked-up
 v2 figure): the keep region must contain no stranded unkept ground — every
 pocket enclosed between kept components (cemetery, street band, rail bundle)
 gets filled. The ONLY cuts inside the outer boundary are building footprints;

@@ -1,127 +1,139 @@
-# Oakland Cemetery boundary cut — evidence for approval
+# Oakland Cemetery boundary cut — evidence for approval (v2)
 
-**Prepared 2026-07-21. This is preparation and evidence only — no gaussians have been cut.**
-Everything below lets you approve, in one look, a hard cut at the cemetery walls that
-keeps the railway strip running along the north edge and drops everything else into black.
+> **SUPERSEDED (2026-07-22) → see `BOUNDARY_CUT_EVIDENCE_v4.md` / `.html`.** v4 rebuilds the complete
+> cemetery footprint after Joel found the single OSM outline clips real cemetery ground (north notch +
+> northeast), adds a full OSM sweep and a drone-content cross-check, and delivers v4a (48.25 ac, == v3)
+> and v4b (50.37 ac, notch + NE added). This v2 document is kept for history only.
+
+**Prepared 2026-07-21. Preparation and evidence only — no gaussians have been cut.**
+This is the **v2** keep region, built to Joel's refined rule: keep the cemetery **plus the
+entire road ring around it, out to the far sidewalk across the street on every side**, but
+**cut every building that sits outside the cemetery walls**. The v1 corridor (a single 30 m
+railway strip) is **superseded** — its figures are kept at the bottom for reference.
+
+> Joel's words: *"in every case, i want the entire road around the cemetery all the way to the
+> sidewalk across the street from the cemetery, but no buildings outside the cemetery walls kept."*
 
 ---
 
-## 1. Georegistration fit — how the real world was aligned to the model
+## 1. What v2 keeps and cuts
 
-The splat model's coordinate frame turned out to already be real-world metric coordinates:
-RealityScan georeferenced the alignment from the drone's own GPS, so recovering the
-world↔model transform came out almost exactly to a 1:1, north-aligned map.
+**KEEP =** the cemetery polygon, **plus a continuous street band that rings all four sides**:
+- **South:** Memorial Drive out to the far sidewalk.
+- **West:** Oakland Avenue out to the far sidewalk.
+- **East:** Boulevard out to the far sidewalk.
+- **North:** the **full railway bundle** (all parallel tracks, not just one strip) **plus the road
+  beyond the rail**, out to the far sidewalk past it.
 
-- **Fit:** 2D similarity, model horizontal plane (X, Z) → world East/North, from **3,270
-  drone photo positions** (the 300ft set) matched to their GPS, in the exact coordinate
-  frame the 36 tiles live in (the 300ft-only solve — confirmed by its bounds matching the
-  tiling's global bounds).
-- **Scale** = 0.999892 (1 model unit = 1 metre). **Rotation** = −0.002° (model X ≈ East,
-  model Z ≈ North). **Shift** = (−81.45 m East, −7.20 m North).
-- **Residuals: median 0.23 m, 95th percentile 0.44 m, max 0.70 m, across all 3,270 points,
-  zero outliers.** Well under the 5 m stop-line and better than the 1–3 m that raw GPS would
-  give — because the model was already georeferenced from that same GPS, so this is
-  essentially confirming the georeference rather than discovering it. Either way the world
-  coordinates land on the model to well under a metre.
+The band is **continuous from the wall outward** — wall, near sidewalk, road, far sidewalk are all
+kept as one piece, so the earlier v1 questions about corridor width and bridging the gap are
+**settled by definition** (the whole thing is in).
+
+**CUT =** everything outside that band, **and every OSM building footprint that lies outside the
+cemetery walls wherever it touches the band** — building faces at the sidewalk line are cut cleanly
+at their footprint, leaving holes in the band where a building stood.
+
+**Result:** keep area **303,549 m²** (the 195,268 m² cemetery plus ~108,000 m² of surrounding road
+band), **33 exterior buildings subtracted**, keep region is 5 polygons with 7 building-holes.
+
+---
+
+## 2. How the band was built (all parameters tunable)
+
+Everything is unioned in real-world metres with a proper geometry engine, then subtracted:
+
+- **Perimeter roads:** every OSM road ringing the site, each buffered to reach its far sidewalk
+  (16 m half-width for arterials like Memorial/Boulevard, ~11 m residential, ~7 m service), then
+  **clipped to within 45 m of the cemetery wall** so side streets are trimmed at the far corner
+  rather than followed off into the neighbourhood.
+- **Railway:** the full adjacent bundle (all tracks within 150 m of the wall, buffered 12 m each and
+  merged), clipped along the frontage plus 100 m each end.
+- **Road beyond the rail (north):** roads within 28 m of the rail bundle are pulled in, so the band
+  reaches the street on the far side of the tracks.
+- **Sidewalks/footways:** buffered 2.5 m and added where mapped, to guarantee the far-sidewalk edge
+  is included (where a separate sidewalk isn't mapped, the road buffer already reaches the building
+  line, which is the effective far edge).
+- **Buildings:** all OSM building footprints outside the walls are unioned and **subtracted** from
+  the band.
+
+The single knobs Joel can turn: the **45 m road ring** (how far past the wall the band reaches on
+the street sides), the road half-widths, and the 28 m road-beyond-rail reach. Nothing else needs a
+decision — the band is a clean ring by construction.
+
+---
+
+## 3. Georegistration fit (unchanged from v1)
+
+The model frame is already real-world metric (RealityScan georeferenced it from the drone GPS).
+Fit on **3,270 drone photo positions** in the exact coordinate frame the 36 tiles live in:
+
+- Scale 0.999892 (1 unit = 1 m), rotation −0.002°, shift (−81.45 m E, −7.20 m N).
+- **Residuals: median 0.23 m, p95 0.44 m, max 0.70 m, 3,270 points, zero outliers** — well under
+  the 5 m stop-line.
 
 *Provenance: `georegistration_transform.json`.*
 
----
+## Cemetery area check (unchanged)
 
-## 2. Cemetery boundary — area sanity check
-
-- Source: OpenStreetMap way **28912001**, name tag **"Oakland Cemetery"** (landuse=cemetery),
-  fetched from the Overpass API.
-- **Computed area = 195,268 m² = 48.3 acres.** The expected figure is ~48 acres (~194,000 m²).
-  **Within 0.7% — passes.**
-
-*Files: `oakland_cemetery.geojson`, raw `osm_cemetery_raw.json`.*
+OSM way **28912001 "Oakland Cemetery"** → **195,268 m² = 48.3 acres**, within **0.7%** of the
+~48-acre spec. Passes.
 
 ---
 
-## 3. The railway kept alongside the cemetery
+## 4. The 36-cell decision surface (v2)
 
-The rail beside Oakland is the **CSX "Atlanta Terminal Subdivision" main line plus the
-near-wall yard tracks**, a bundle of parallel tracks running along the cemetery's
-north-west edge and curving off to the north-east toward Hulsey Yard. Only the portion
-**alongside the cemetery** is kept; the rest of the line (sweeping away to Hulsey) is cut.
+Each tile is classed by the **exact fraction of its area** inside the v2 keep region. The street
+band lifts every edge tile compared with v1 — the south row roughly tripled, the west column and
+the corners all gained, and no tile is wholly outside any more (v1's lone outside tile, 5_5, is now
+clipped by the north rail band).
 
-- **Selection:** every rail way that comes within **150 m** of the cemetery boundary
-  (11 OSM ways), then clipped along the corridor to the **cemetery's frontage plus 100 m at
-  each end** — so the far reaches of the main line (2+ km away) are not kept.
-- **Corridor:** a single centreline runs down the middle of that adjacent rail bundle, kept
-  as a **30 m-wide strip (default; 15 m each side)**. **This width is the tunable parameter** —
-  raise or lower it in one place and re-run.
-- **Measurements for your decision:** the adjacent rail bundle is **45.8 m wide** across all
-  its parallel tracks; the 30 m default corridor therefore captures the central tracks with
-  ~8 m of the outermost track falling outside on each side. The corridor centreline sits
-  **~14 m from the cemetery wall** at its closest, so it reads as attached to the north edge
-  rather than floating away.
+- **16 wholly inside** · **20 partially cut (edge ring)** · **0 wholly outside**
 
-**Two choices that are yours to make (they are why this is an approval step, not a finished cut):**
-1. **Width** — keep the 30 m default, or widen to ~50 m to swallow the full 45.8 m bundle
-   (all parallel tracks), or narrow it to just the main pair.
-2. **Connection** — leave the ~14 m gap so the rail strip sits just off the cemetery, or
-   bridge it so the kept rail is one continuous piece with the cemetery.
-
-*Files: `oakland_railway.geojson`, raw `osm_railway_raw.json`, `boundary_keep_polygon.json`
-(the keep region in model coordinates — the assembly stage's input).*
-
----
-
-## 4. The 36-cell decision surface
-
-Each of the model's 36 tiles is classed by how much of it falls inside the keep region
-(cemetery + railway corridor). This is the edge-ring worklist: **green tiles need no cutting,
-gray tiles are dropped whole, and the orange tiles are where the wall actually passes through
-and a cut has to be made.**
-
-- **15 wholly inside** · **20 partially cut (edge ring)** · **1 wholly outside**
-
-Grid below is oriented like the figure — north (row 5) at top, west (column 0) at left.
-Each cell shows the percent of its area kept.
+North (row 5) at top, west (column 0) at left — matches the figure. Each cell shows percent kept.
 
 | row \ col | col 0 (W) | col 1 | col 2 | col 3 | col 4 | col 5 (E) |
 |---|---|---|---|---|---|---|
-| **row 5 (N)** | 0\_5 · 25% · partial | 1\_5 · 52% · partial | 2\_5 · 60% · partial | 3\_5 · 50% · partial | 4\_5 · 23% · partial | **5\_5 · 0% · OUT** |
-| **row 4** | 0\_4 · 48% · partial | 1\_4 · 100% · IN | 2\_4 · 100% · IN | 3\_4 · 100% · IN | 4\_4 · 98% · partial | 5\_4 · 11% · partial |
-| **row 3** | 0\_3 · 47% · partial | 1\_3 · 100% · IN | 2\_3 · 100% · IN | 3\_3 · 100% · IN | 4\_3 · 100% · IN | 5\_3 · 40% · partial |
-| **row 2** | 0\_2 · 48% · partial | 1\_2 · 100% · IN | 2\_2 · 100% · IN | 3\_2 · 100% · IN | 4\_2 · 100% · IN | 5\_2 · 59% · partial |
-| **row 1** | 0\_1 · 49% · partial | 1\_1 · 100% · IN | 2\_1 · 100% · IN | 3\_1 · 100% · IN | 4\_1 · 100% · IN | 5\_1 · 60% · partial |
-| **row 0 (S)** | 0\_0 · 4% · partial | 1\_0 · 9% · partial | 2\_0 · 9% · partial | 3\_0 · 11% · partial | 4\_0 · 11% · partial | 5\_0 · 7% · partial |
+| **row 5 (N)** | 0\_5 · 37% · partial | 1\_5 · 74% · partial | 2\_5 · 84% · partial | 3\_5 · 79% · partial | 4\_5 · 48% · partial | 5\_5 · 3% · partial |
+| **row 4** | 0\_4 · 57% · partial | 1\_4 · 100% · IN | 2\_4 · 100% · IN | 3\_4 · 100% · IN | 4\_4 · 100% · IN | 5\_4 · 33% · partial |
+| **row 3** | 0\_3 · 58% · partial | 1\_3 · 100% · IN | 2\_3 · 100% · IN | 3\_3 · 100% · IN | 4\_3 · 100% · IN | 5\_3 · 56% · partial |
+| **row 2** | 0\_2 · 58% · partial | 1\_2 · 100% · IN | 2\_2 · 100% · IN | 3\_2 · 100% · IN | 4\_2 · 100% · IN | 5\_2 · 71% · partial |
+| **row 1** | 0\_1 · 62% · partial | 1\_1 · 100% · IN | 2\_1 · 100% · IN | 3\_1 · 100% · IN | 4\_1 · 100% · IN | 5\_1 · 75% · partial |
+| **row 0 (S)** | 0\_0 · 14% · partial | 1\_0 · 23% · partial | 2\_0 · 22% · partial | 3\_0 · 22% · partial | 4\_0 · 26% · partial | 5\_0 · 20% · partial |
 
-Notes: the four central columns of rows 1–4 are the solid cemetery interior (all 100% keep).
-The south row (row 0) is nearly all cut — only a thin 4–11% sliver of the cemetery's south
-edge survives, so those tiles become thin edge rings. The east column and the north row are
-the boundary-crossing tiles. Tile **5\_5** (far north-east corner) is the only tile that lies
-entirely beyond both the cemetery and the kept rail — it is dropped whole.
+The four central columns of rows 1–4 are the solid cemetery interior (16 tiles at 100%). Every
+other tile is an edge tile the wall or band passes through — the south row now keeps a 14–26% road
+strip (was a 4–11% sliver), and the corner tile 5_5 keeps a 3% rail clip.
 
-*Full numeric table with cell bounds: `cell_table.json`.*
+*Full numeric table with cell bounds: `cell_table_v2.json`.*
 
 ---
 
-## 5. Figures
+## 5. Figures (v2)
 
-- **`fig_A_model_grid.png`** — the decision figure: the 6×6 grid in model coordinates with
-  every cell shaded (green inside / orange partial / gray outside), the cemetery boundary,
-  the railway corridor, and the drone camera footprint. This is the one-look approval image.
-- **`fig_B_world_context.png`** — geographic sanity in real-world coordinates (north up):
-  the cemetery, the kept corridor, and the whole rail line so you can see exactly which rail
-  is kept (brown/blue, along the frontage) versus cut (light tan, running off to Hulsey Yard).
-- **`diag_zoom.png`** — supporting zoom of the rail bundle beside the cemetery with a 150 m
-  band, used to design the corridor.
+- **`fig_A_model_grid_v2.png`** — the decision figure: 6×6 grid in model coordinates, each cell
+  shaded by keep fraction, the v2 keep region filled green, the cemetery boundary, and the
+  subtracted buildings hatched red. This is the one-look approval image.
+- **`fig_B_world_context_v2.png`** — real-world coordinates (north up): the green keep region
+  ringing the cemetery, all neighbourhood buildings in grey with the subtracted ones hatched red,
+  and the road/rail network for context. Shows exactly where the band reaches and which buildings
+  are cut out.
+
+**Superseded v1 figures** (single 30 m railway corridor, no road ring): `fig_A_model_grid.png`,
+`fig_B_world_context.png`, `diag_zoom.png`. Kept for reference; do not use for the cut.
 
 ---
 
 ## 6. What is not done / caveats
 
-- **No gaussians have been cut.** This stage produces the keep polygon and the evidence only.
-  The actual cut waits on your approval of the corridor width and connection choice above.
-- **No photographic underlay.** The task allowed skipping it; warping the near-nadir flythrough
-  frame onto the map is not straightforward (that render's camera pose is not in the solve's
-  pose file), so the evidence is the clean schematic plus the real-world geographic figure.
-- **Cell classification** is by dense sampling (45×45 points per tile); percentages are exact
-  to that grid. Tiles at exactly 100% / 0% are wholly inside / outside; everything between is
-  a genuine edge tile.
-- The keep polygon is stored in **model coordinates** (`boundary_keep_polygon.json`), ready to
-  feed the assembly/cut stage directly.
+- **No gaussians have been cut.** This produces the v2 keep polygon and evidence only.
+- **Keep polygon has holes.** `boundary_keep_polygon_v2.json` is a list of polygons, each with an
+  exterior ring and hole rings (the subtracted buildings), in model coordinates — the cut stage's
+  input.
+- **Far-sidewalk edge** is taken as the road buffer reaching the building line, augmented by mapped
+  footways where present. Where OSM has no separate sidewalk, the building line is the effective far
+  edge (buildings are subtracted there anyway).
+- **No photographic underlay** (allowed by the task; the flythrough frame's pose isn't in the solve).
+- **Cell percentages are exact** (polygon-area intersection, not sampled).
+- A few thin band tendrils follow side streets ~45 m to the first corner and the rail frontage
+  ~100 m past the cemetery — both intended (the ring is clipped near the far corners, not run into
+  the city). The 45 m ring is the one dial to turn if Joel wants the street sides tighter or looser.
