@@ -152,7 +152,18 @@ cut ignores) but RE-VERIFY the combined solve's own georeference (GPS vs its
   SplatForge and BlendSplat share the same wall — do NOT buy SplatForge for
   headless automation ($49 answers a question we no longer have).
 - Consequence: Blender splat rendering requires a GUI session with a live GPU
-  context. Options pending Joel: automate a console GUI session on Skychief
+  context. RESOLVED CHAIN (2026-07-22, four bounded attempts): (1) import hangs when
+called at --python startup in GUI — cured by deferring the whole sequence
+into bpy.app.timers stages (the event loop must be pumping); (2) the KIRI
+extension lived in Joel's profile, not the render account's — extension repo
+repointed; (3) Advanced Render silently draws nothing unless
+bpy.gaussian_quad_shader exists — its own rebuild path is doubly broken
+(wrong assets subfolder + a globals() scoping bug), and interactively only
+the viewport draw builds it; script-side cure = call KIRI's own
+sna_r2_viewport_update_BA246() (the Refresh Scene internal) before rendering.
+PROVEN: 3/3 frames rendered non-interactively on the auto-signed-in console.
+Remaining: camera framing (up axis -Y + percentile aim box, in progress) —
+machinery is done. Superseded text follows for history: automate a console GUI session on Skychief
   (autologin + GUI automation; RDP may not bind the 3090 for GL) or do the
   Blender reel interactively and let UE carry the seamless-world goal.
 
