@@ -179,7 +179,9 @@ painted overlay. HIDE THE SOURCE MESH (hide_set) and the viewport draws
 true color; the .blend is saved with the mesh hidden so it opens clean.
 Plain EEVEE/Cycles still render BLANK (geometry nodes feed them 0 faces,
 same as headless Windows) — output goes through KIRI Advanced Render. scipy has no arm64 wheel — lazy import,
-harmless. Machinery is done on both machines. Superseded text follows for history: automate a console GUI session on Skychief
+harmless. Machinery is done on both machines. STANDING RULE (Joel, 2026-07-22):
+every Blender scene delivered to him ships with the carrier/source mesh
+HIDDEN (hide_set) and is SAVED in that state — never show the scaffold. Superseded text follows for history: automate a console GUI session on Skychief
   (autologin + GUI automation; RDP may not bind the 3090 for GL) or do the
   Blender reel interactively and let UE carry the seamless-world goal.
 
