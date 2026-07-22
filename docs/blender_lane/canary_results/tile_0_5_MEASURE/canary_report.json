@@ -1,0 +1,27 @@
+{
+  "tile": "H:\\2026 Files\\26-002 Oakland Cemetery Splat\\deliver\\ue_tiles\\tile_0_5.ply",
+  "engine": "MEASURE",
+  "steps": {
+    "addon_candidates": [
+      "bl_ext.user_default.dgs_render_by_kiri_engine"
+    ],
+    "addon_enabled": [
+      "bl_ext.user_default.dgs_render_by_kiri_engine"
+    ],
+    "addon_enable_s": 0.0,
+    "sna_group_present": true,
+    "sna_operator_count": 53,
+    "sna_import_ops": [
+      "sna.dgs_render_import_image_overlay_4a457",
+      "sna.dgs_render_import_ply_e0a3a"
+    ],
+    "import_operator_used": "sna.dgs_render_import_ply_e0a3a",
+    "import_last_error": null,
+    "import_s": 2.9,
+    "objects_after_import": 1,
+    "objects_delta": 1,
+    "mesh_vertex_total": 186022
+  },
+  "ok": true,
+  "wall_total_s": 10.9
+}

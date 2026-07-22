@@ -1,0 +1,40 @@
+{
+  "tile": "H:\\2026 Files\\26-002 Oakland Cemetery Splat\\deliver\\ue_tiles\\tile_0_5.ply",
+  "engine": "EEVEE",
+  "steps": {
+    "addon_candidates": [
+      "bl_ext.user_default.dgs_render_by_kiri_engine"
+    ],
+    "addon_enabled": [
+      "bl_ext.user_default.dgs_render_by_kiri_engine"
+    ],
+    "addon_enable_s": 0.0,
+    "sna_group_present": true,
+    "sna_operator_count": 53,
+    "sna_import_ops": [
+      "sna.dgs_render_import_image_overlay_4a457",
+      "sna.dgs_render_import_ply_e0a3a"
+    ],
+    "import_operator_used": "sna.dgs_render_import_ply_e0a3a",
+    "import_last_error": null,
+    "import_s": 6.0,
+    "objects_after_import": 1,
+    "objects_delta": 1,
+    "mesh_vertex_total": 186022,
+    "bbox_min": [
+      198.83,
+      -26.07,
+      137.98
+    ],
+    "bbox_max": [
+      393.99,
+      6.5,
+      264.53
+    ],
+    "bbox_diag": 234.86,
+    "render_s": 13.3,
+    "render_png": "C:\\blender_lane\\canary_out\\tile_0_5_EEVEE\\canary_eevee.png"
+  },
+  "ok": true,
+  "wall_total_s": 19.2
+}

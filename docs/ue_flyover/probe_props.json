@@ -1,0 +1,99 @@
+{
+ "fog_props": [
+  "directional_inscattering_exponent",
+  "directional_inscattering_luminance",
+  "directional_inscattering_start_distance",
+  "enable_volumetric_fog",
+  "fog_cutoff_distance",
+  "fog_density",
+  "fog_height_falloff",
+  "fog_inscattering_luminance",
+  "fog_max_opacity",
+  "fully_directional_inscattering_color_distance",
+  "inscattering_color_cubemap",
+  "inscattering_color_cubemap_angle",
+  "inscattering_texture_tint",
+  "non_directional_inscattering_color_distance",
+  "override_light_colors_with_fog_inscattering_colors",
+  "second_fog_data",
+  "set_directional_inscattering_color",
+  "set_directional_inscattering_exponent",
+  "set_directional_inscattering_start_distance",
+  "set_fog_cutoff_distance",
+  "set_fog_density",
+  "set_fog_height_falloff",
+  "set_fog_inscattering_color",
+  "set_fog_max_opacity",
+  "set_fully_directional_inscattering_color_distance",
+  "set_inscattering_color_cubemap",
+  "set_inscattering_color_cubemap_angle",
+  "set_inscattering_texture_tint",
+  "set_non_directional_inscattering_color_distance",
+  "set_second_fog_data",
+  "set_second_fog_density",
+  "set_second_fog_height_falloff",
+  "set_second_fog_height_offset",
+  "set_volumetric_fog",
+  "set_volumetric_fog_albedo",
+  "set_volumetric_fog_distance",
+  "set_volumetric_fog_emissive",
+  "set_volumetric_fog_extinction_scale",
+  "set_volumetric_fog_near_fade_in_distance",
+  "set_volumetric_fog_scattering_distribution",
+  "set_volumetric_fog_start_distance",
+  "sky_light_capture_affects_height_fog_roughness",
+  "sky_light_capture_affects_height_fog_strength",
+  "volumetric_fog_albedo",
+  "volumetric_fog_distance",
+  "volumetric_fog_emissive",
+  "volumetric_fog_extinction_scale",
+  "volumetric_fog_near_fade_in_distance",
+  "volumetric_fog_scattering_distribution",
+  "volumetric_fog_start_distance",
+  "volumetric_fog_static_lighting_scattering_intensity"
+ ],
+ "skylight_props": [
+  "capture_emissive_only",
+  "indirect_lighting_intensity",
+  "intensity",
+  "real_time_capture",
+  "recapture_sky",
+  "set_indirect_lighting_intensity",
+  "set_intensity",
+  "set_real_time_capture",
+  "set_source_cubemap_angle",
+  "set_volumetric_scattering_intensity",
+  "source_cubemap_angle",
+  "source_type",
+  "volumetric_scattering_intensity"
+ ],
+ "moviepipeline_names": [],
+ "n_tiles": 36,
+ "tile_bounds_union": {
+  "min": [
+   -103813.609375,
+   -38514.9765625,
+   -176695.3125
+  ],
+  "max": [
+   283576.125,
+   46651.19140625,
+   33734.33984375
+  ],
+  "n": 36
+ },
+ "sample_tile": {
+  "label": "tile_0_0",
+  "origin": [
+   -16475.75,
+   23325.595703125,
+   1283.6747741699219
+  ],
+  "extent": [
+   16475.75,
+   23325.595703125,
+   2007.1902160644531
+  ]
+ },
+ "mrq_plugin": false
+}

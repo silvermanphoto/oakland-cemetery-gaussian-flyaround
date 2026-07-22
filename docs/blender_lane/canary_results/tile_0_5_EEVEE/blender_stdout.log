@@ -1,0 +1,24 @@
+[CANARY] cleared 0 default objects
+[CANARY] Addon module candidates: ['bl_ext.user_default.dgs_render_by_kiri_engine']
+[CANARY] sna group present: True
+[CANARY] sna operators: 53 ; import ops: ['sna.dgs_render_import_image_overlay_4a457', 'sna.dgs_render_import_ply_e0a3a']
+[CANARY] Trying import operator sna.dgs_render_import_ply_e0a3a(filepath)
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+PLY import of 'tile_0_5.ply' took 3508.15 ms
+Successfully imported PLY file tile_0_5.ply and all required 3DGS attributes (f_dc_0, f_dc_1, f_dc_2, opacity, scale_0, scale_1, scale_2, rot_0, rot_1, rot_2, rot_3, f_rest_0) are present on tile_0_5.
+Number of points (vertices): 186022
+Length of f_dc_0_data: 186022
+Length of f_dc_1_data: 186022
+Length of f_dc_2_data: 186022
+Length of opacity_data: 186022
+Length of color_data (Col and KIRI_3DGS_Paint): 744088
+Expected length for POINT domain: 744088
+Created Col attribute on tile_0_5 with 186022 points.
+Created KIRI_3DGS_Paint attribute on tile_0_5 with 186022 color values on the POINT domain.
+Assigned material 'KIRI_3DGS_Render_Material' to tile_0_5 and removed existing material slots.
+[CANARY] EEVEE engine = BLENDER_EEVEE
+00:19.641  render           | Saved: 'C:\blender_lane\canary_out\tile_0_5_EEVEE\canary_eevee.png'
+[CANARY] RENDER done in 13.3s -> C:\blender_lane\canary_out\tile_0_5_EEVEE\canary_eevee.png
+[CANARY] REPORT -> C:\blender_lane\canary_out\tile_0_5_EEVEE\canary_report.json
+
+Blender quit

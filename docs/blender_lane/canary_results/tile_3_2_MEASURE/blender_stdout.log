@@ -1,0 +1,20 @@
+[CANARY] cleared 0 default objects
+[CANARY] Addon module candidates: ['bl_ext.user_default.dgs_render_by_kiri_engine']
+[CANARY] sna group present: True
+[CANARY] sna operators: 53 ; import ops: ['sna.dgs_render_import_image_overlay_4a457', 'sna.dgs_render_import_ply_e0a3a']
+[CANARY] Trying import operator sna.dgs_render_import_ply_e0a3a(filepath)
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:37:34)
+PLY import of 'tile_3_2.ply' took 4131.19 ms
+Successfully imported PLY file tile_3_2.ply and all required 3DGS attributes (f_dc_0, f_dc_1, f_dc_2, opacity, scale_0, scale_1, scale_2, rot_0, rot_1, rot_2, rot_3, f_rest_0) are present on tile_3_2.
+Number of points (vertices): 4318345
+Length of f_dc_0_data: 4318345
+Length of f_dc_1_data: 4318345
+Length of f_dc_2_data: 4318345
+Length of opacity_data: 4318345
+Length of color_data (Col and KIRI_3DGS_Paint): 17273380
+Expected length for POINT domain: 17273380
+Created Col attribute on tile_3_2 with 4318345 points.
+Created KIRI_3DGS_Paint attribute on tile_3_2 with 4318345 color values on the POINT domain.
+Assigned material 'KIRI_3DGS_Render_Material' to tile_3_2 and removed existing material slots.
+[CANARY] MEASURE mode: imported 4318345 verts; holding for sampler.
+[CANARY] REPORT -> C:\blender_lane\canary_out\tile_3_2_MEASURE\canary_report.json

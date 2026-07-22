@@ -203,6 +203,21 @@ VIEWPORT is ALSO correct — the earlier "dark from above" was NOT a color
 bug: it was the un-hidden CARRIER MESH (4.3M bare quads) occluding the
 painted overlay. HIDE THE SOURCE MESH (hide_set) and the viewport draws
 true color; the .blend is saved with the mesh hidden so it opens clean.
+WHOLE-SITE .BLEND CONVENTIONS (2026-07-22 evening): the delivered
+oakland_whole_site.blend is now BLENDER-CONVENTIONAL — everything (chunks,
+proxies, camera) is parented to an "Oakland_Root" empty rotated -90 deg X, so
+Z is up and Top/Front/Side views behave normally (rotate the ROOT, never the
+chunks; re-run the KIRI refresh after any root transform — the display
+textures bake world-space). An embedded VIEW GUARD (text datablock
+oakland_view_guard.py, use_module, 0.15 s timer) enforces Joel's navigation
+law: pitch clamped to the upper half-hemisphere (no under-ground, no flips,
+roll pinned 0), zoom-out capped ~950, orbit pivot leashed to the site box —
+torture-tested (forced illegal states snap back). Future opens prompt once to
+Allow Execution (the guard is in-file); declining just disables the rails.
+Cap-window ops lesson (2026-07-22): Joel's weekly Claude cap silences EVERY
+Claude layer at once (lead, pulse, heartbeat sessions, agents) — treat the
+weekly reset as a hard operational boundary during multi-day metered runs;
+the pod-side idle self-guards + launchd sentinel are the layers that survive.
 WHOLE-SITE SCENE PATH (proven 2026-07-22): KIRI's import hangs on a single
 PLY somewhere above ~5.15M gaussians (loads ~34 GB then never returns — not
 OOM, not disk). Whole-site scenes therefore import as ~4M-gaussian CHUNKS

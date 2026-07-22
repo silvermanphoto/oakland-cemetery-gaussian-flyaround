@@ -1,0 +1,85 @@
+{
+ "sections": {
+  "bounds": {
+   "ok": true,
+   "detail": "center=(-423,-651,-6702) from 36 tiles (union raw floater-inflated)"
+  },
+  "directional_light": {
+   "ok": true,
+   "detail": "pitch=-12.73 yaw=50.11"
+  },
+  "sky_atmosphere": {
+   "ok": true,
+   "detail": ""
+  },
+  "sky_light": {
+   "ok": true,
+   "detail": "intensity=1.0 real_time_capture=on"
+  },
+  "height_fog": {
+   "ok": true,
+   "detail": "density=0.010 enable_volumetric_fog=on"
+  },
+  "post_process": {
+   "ok": true,
+   "detail": "manual exposure, motion blur 0.30"
+  },
+  "gamemode_override": {
+   "ok": true,
+   "detail": "AOaklandFlyGameMode"
+  },
+  "player_start": {
+   "ok": true,
+   "detail": "loc=(-12123,-651,-5202) look +X"
+  },
+  "level_sequence": {
+   "ok": true,
+   "detail": "clean rebuild, 4-key 20s path in real coords"
+  },
+  "mrq_config": {
+   "ok": false,
+   "detail": "MoviePipeline classes still absent (plugin load?)"
+  },
+  "save": {
+   "ok": true,
+   "detail": ""
+  },
+  "validate": {
+   "ok": true,
+   "detail": "{\"Sun_Directional\": true, \"SkyAtmosphere\": true, \"SkyLight\": true, \"HeightFog\": true, \"PostProcess_Global\": true, \"FlyStart\": true, \"FlyoverCine\": true}"
+  }
+ },
+ "notes": [
+  "union raw min=[-103813, -38514, -176695] max=[283576, 46651, 33734] (floaters inflate this; pawn soft-bounds use it + margin at runtime)"
+ ],
+ "center_median": [
+  -422.8588409423828,
+  -650.9137573242188,
+  -6701.649169921875
+ ],
+ "union_raw": {
+  "min": [
+   -103813.609375,
+   -38514.9765625,
+   -176695.3125
+  ],
+  "max": [
+   283576.125,
+   46651.19140625,
+   33734.33984375
+  ],
+  "n": 36
+ },
+ "validation": {
+  "present": {
+   "Sun_Directional": true,
+   "SkyAtmosphere": true,
+   "SkyLight": true,
+   "HeightFog": true,
+   "PostProcess_Global": true,
+   "FlyStart": true,
+   "FlyoverCine": true
+  },
+  "n_actors": 43
+ }
+}

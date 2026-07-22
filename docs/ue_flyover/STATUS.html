@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oakland Flyover — build status</title>
+<style>
+  :root { color-scheme: light; }
+  body { font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+         color: #23241f; background: #faf8f4; margin: 0; padding: 2.2rem 1.4rem 5rem; }
+  main { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 .2rem; }
+  h2 { font-size: 1.3rem; margin: 2.3rem 0 .6rem; padding-bottom: .25rem; border-bottom: 2px solid #e6e0d5; }
+  h3 { font-size: 1.05rem; margin: 1.3rem 0 .3rem; }
+  .sub { color: #6d6e68; margin: 0 0 1.4rem; }
+  code { background: #efece4; padding: .08em .35em; border-radius: 4px; font-size: .88em; }
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0; font-size: .93rem; }
+  th, td { text-align: left; padding: .42rem .6rem; border-bottom: 1px solid #e6e0d5; vertical-align: top; }
+  th { background: #f1ede4; }
+  ul { padding-left: 1.2rem; } li { margin: .28rem 0; }
+  .card { background: #fff; border: 1px solid #e6e0d5; border-radius: 10px; padding: .9rem 1.2rem; margin: .8rem 0; }
+  .ok { color: #3f7d3f; font-weight: 600; } .todo { color: #b06a2c; font-weight: 600; }
+  .accent { color: #4b8f76; } /* lidargraphs / oakland cactus-adjacent */
+  strong { color: #111; }
+  .render-verdict { border-left: 4px solid #4b8f76; padding-left: 1rem; }
+  .wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+<h1>Oakland Flyover — build status</h1>
+<p class="sub">Phases D + E + F prep · built headless on the existing 36-tile v1 world · 2026-07-21 ·
+UE 5.8 on Skychief · nothing committed to git.</p>
+
+<div class="card">Everything here lives <em>above</em> the tiles. A later v2 tile swap re-runs the
+tile import and <strong>nothing in this build changes</strong> — the fly pawn even re-fits its
+soft bounds to the new splat volume automatically.</div>
+
+<h2>What exists now</h2>
+
+<h3>Fly camera <span class="accent">(C++, compiled — the biggest risk, cleared first)</span></h3>
+<ul>
+<li><strong>AOaklandFlyPawn</strong> — a smooth spectator fly camera: real inertia (ease-in / ease-out),
+a scroll-wheel speed ramp, hold-Shift boost, subtle banked turns, collision fully off, and
+<strong>soft world bounds that auto-fit the splat volume at play</strong> so it can't wander into
+the void. WASD + mouse-look + wheel, read straight from the controller — no extra input setup needed.</li>
+<li><strong>AOaklandFlyGameMode</strong> — makes that pawn the default; set as the map's GameMode
+Override, so Play drops you straight into the fly camera.</li>
+</ul>
+
+<h3>Environment &amp; lighting (Phase D)</h3>
+<ul>
+<li><strong>Sun_Directional</strong> — DirectionalLight matched to the real capture sun (below), warm 4600 K.</li>
+<li><strong>SkyAtmosphere</strong> · <strong>SkyLight</strong> (real-time ambient) · <strong>HeightFog</strong>
+(ground-level, subtle volumetric fog on, warm) · <strong>PostProcess_Global</strong> (unbound: filmic
+tonemap, manual exposure, gentle bloom, motion blur for the reel).</li>
+</ul>
+
+<h3>Sequencer scaffold (Phase F prep)</h3>
+<ul>
+<li><strong>LevelSequence</strong> <code>/Game/Cinematics/OaklandFlyover_Example</code> — 24 fps, 20 s,
+a bound 24 mm CineCamera and a 4-key placeholder path (gate approach → avenue glide → reveal) plus a
+camera-cut track. A scaffold to author over, not a finished shot.</li>
+<li><strong>PlayerStart FlyStart</strong> — <em>inside</em> the scene, south edge, ~16 m up, looking
+north across the cemetery (Play starts in the sweet spot, not outside looking at a haze-ball).</li>
+</ul>
+
+<h2>The sun assumption <span class="accent">(corrected — not a 10 a.m. morning capture)</span></h2>
+<div class="card">
+<p>The brief assumed a ~10 a.m. December morning. The source frames say the flight ran
+<strong>15:36:57 → 16:52:49 on Dec 22, 2022</strong> — a <strong>late-afternoon</strong> capture
+(EXIF "Date taken 3:36 PM"; Atlanta EST; drone GPS confirms Atlanta). 15:36 UTC would be 10:36 EST,
+so the timezone was pinned two ways before trusting it.</p>
+<p>NOAA solar position for that window: the sun tracked <strong>south-west, low and descending</strong> —
+midpoint <strong>azimuth ≈ 230°, elevation ≈ 12.7°</strong> (consistent with the ~5:33 p.m. sunset that
+day). With the georegistered frame (UE world +X = North, +Y = East, +Z = Up), the DirectionalLight is
+<strong>Pitch −12.73°, Yaw +50.11°, Roll 0</strong> — a warm winter afternoon sun. One soft assumption
+remains: the drone's camera-clock accuracy (no GPS-time field stored to cross-check); direction is
+high-confidence, worth an eye-check against a baked shadow.</p>
+</div>
+
+<h2>Fly-pawn tunables <span class="accent">(Joel's one-file taste pass)</span></h2>
+<p>Every feel value is a default in <strong>one file</strong> —
+<code>Source/OaklandFlyaround/OaklandFlyPawn.h</code>.</p>
+<div class="wrap"><table>
+<tr><th>Parameter</th><th>Default</th><th>What it does</th></tr>
+<tr><td>CruiseSpeed</td><td>1200 cm/s</td><td>Base flight speed the scroll wheel ramps</td></tr>
+<tr><td>SpeedMin / SpeedMax</td><td>150 / 12000</td><td>Clamps for the scroll ramp</td></tr>
+<tr><td>ScrollSpeedStep</td><td>1.15×</td><td>Speed multiplier per wheel notch</td></tr>
+<tr><td>BoostMultiplier</td><td>3.0×</td><td>Hold-Shift sprint</td></tr>
+<tr><td>Acceleration</td><td>2400 cm/s²</td><td>Ease-IN (down = floatier launch)</td></tr>
+<tr><td>Deceleration</td><td>2400 cm/s²</td><td>Ease-OUT glide (down = longer glide)</td></tr>
+<tr><td>LookSensitivity</td><td>1.0 °/count</td><td>Mouse-look speed</td></tr>
+<tr><td>LookSmoothing</td><td>12.0</td><td>Look damping (higher = crisper)</td></tr>
+<tr><td>bRequireRMBToLook</td><td>true</td><td>Hold Right-Mouse to look+fly (false = always-look)</td></tr>
+<tr><td>bEnableBanking / MaxBankAngle</td><td>true / 8°</td><td>Subtle camera roll into turns</td></tr>
+<tr><td>bAutoComputeBounds</td><td>true</td><td>Confine camera to the splat volume (v2-proof)</td></tr>
+<tr><td>BoundsMarginCm / Vertical</td><td>6000 / 12000</td><td>Breathing room past the splats (60 m / 120 m)</td></tr>
+<tr><td>BoundsPushStrength</td><td>3.0</td><td>How firmly the soft wall eases you back</td></tr>
+</table></div>
+<p>Keys: <strong>W/S</strong> fwd-back · <strong>A/D</strong> strafe · <strong>E/Space</strong> up ·
+<strong>Q/Ctrl</strong> down · <strong>scroll</strong> = speed · <strong>Shift</strong> = boost ·
+hold <strong>Right-Mouse</strong> to look.</p>
+
+<h2>Headless render outcome</h2>
+<div class="card render-verdict" id="render">
+<p><em>Pending — finalized when the render resolves.</em></p>
+</div>
+
+<h2>What still needs eyes-on</h2>
+<ul>
+<li><span class="todo">Feel &amp; seam pass.</span> Fly it in PIE: seams invisible, sun matches baked
+shadows (nudge yaw if needed), fog/exposure read well, pawn feel to taste (all one file, above).</li>
+<li><span class="todo">MRQ config asset.</span> Deferred: enabling MovieRenderPipeline headless crashes
+this source-engine build (missing OpenColorIO module). In the GUI, enable Movie Render Queue via the
+Plugins browser (it offers to build the missing modules), then create the 4K / 32-temporal-sample config — ~1 min.</li>
+<li><span class="todo">Author the real reel path</span> over the placeholder sequence (Phase F proper).</li>
+</ul>
+
+<h2>When the v2 tiles land</h2>
+<p class="ok">Nothing structural. Environment, lighting, pawn, GameMode, PlayerStart, and Sequencer
+reference no tile by name; the v2 swap is just a re-run of the tile import. Worth a glance after v2:
+the sun <em>yaw</em> and the PlayerStart height — both single numbers.</p>
+
+</main>
+</body>
+</html>

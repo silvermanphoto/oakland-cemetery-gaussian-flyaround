@@ -1,0 +1,20 @@
+{
+  "shot_id": "smoke_tile_3_2",
+  "_comment": "3-frame smoke shot -- the FIRST GUI-session render test. tile_3_2 is the obelisk cell, 4.32M gaussians (~9.5 GB projected RAM, well under budget). auto_orbit frames the cell from its measured bbox so it cannot be mis-aimed; if frame 1 renders upside-down the true up is -Y (COLMAP y-down) -- a one-line flip for real shots. render_shot.log logs the real bbox + GL renderer + KIRI property names on this first run.",
+  "tile_dir": "H:\\2026 Files\\26-002 Oakland Cemetery Splat\\deliver\\ue_tiles",
+  "tiles": ["tile_3_2.ply"],
+  "output_dir": "C:\\blender_lane\\farm\\out\\smoke_tile_3_2",
+  "resolution": [1920, 1080],
+  "sh_degree": 3,
+  "mem_budget_gb": 45.0,
+  "gb_per_million_gaussians": 2.2,
+  "watchdog_s": 900,
+  "camera": {
+    "lens_mm": 35,
+    "sensor_mm": 36,
+    "clip_start": 0.1,
+    "clip_end": 100000.0,
+    "up_axis": "Y",
+    "auto_orbit": { "frames": 3, "arc_deg": 30, "dist_factor": 1.25, "height_factor": 0.5, "az_start_deg": 40 }
+  }
+}
