@@ -99,7 +99,16 @@ external decimated LOD ladder; UE tiles are just the full-count per-cell crops.
 NanoGS also bakes the COLMAP→UE axis flip AND the metres→cm ×100 scale at
 import, so UE tile actors take an IDENTITY transform. Pilot = `tile_3_2`
 (obelisk cell).
-Quality gate: judged by eye against the source frames' sharpness (Joel was
+SHOT GRAMMAR (Joel's empirical find, 2026-07-22 — binds flyover + reel
+camera work): splat quality is per-SURFACE, not per-view-angle. Tall
+vertical content (trees, monuments, walls) was sampled from oblique orbits
+and reads volumetric even in near-horizontal side views; the GROUND was
+sampled only from steeply above, so its flat gaussians smear to mush when a
+view ray GRAZES the terrain. One frame can be both (crisp trees over smeared
+ground). Compose accordingly: side views are fine when the frame is filled
+with tall content; keep deep grazing ground planes out of foregrounds; when
+low, aim ACROSS at subjects, not along the ground. Decimated interactive
+scenes smear earlier than full-count renders. Quality gate: judged by eye against the source frames' sharpness (Joel was
 the pilot; the footage is razor sharp — no reference-frame ceremony needed).
 
 ## BOUNDARY CUT — Joel's directive, 2026-07-21 (binding for assembly + all deliverables)
