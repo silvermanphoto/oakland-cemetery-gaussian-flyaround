@@ -118,7 +118,16 @@ cut decision: avoid the "cut out by scissors" look. Cuts must land on the
 city's own seams (curb lines, pavement edges, building faces), never through
 the middle of urban fabric — the cemetery reads as a complete artifact on its
 street plinth. When a boundary call is ambiguous, choose the edge that reads
-as a natural urban seam. AUTHORITATIVE FOOTPRINT (2026-07-22): Joel is supplying his own GeoJSON of
+as a natural urban seam. BOUNDARY — APPROVED FINAL (Joel, 2026-07-22). The cut polygon is
+docs/boundary_cut/boundary_keep_polygon_FINAL.json: Joel's hand-traced
+13-corner line (64.45 ac after cuts), verified sub-meter onto the model,
+minus 8 exterior buildings, with TWO PROTECTIONS Joel confirmed: the
+mis-tagged mausoleum at the north notch (osm 270494300 — drone-proven
+cemetery content) and the immaterial house sliver both KEPT; the 391 m2
+ne_b fringe outside his line goes to black (his line is authority). The
+assembly stage cuts with THIS polygon after the combined-solve
+georeference re-verification gate. Geometry decisions are CLOSED.
+Historical: AUTHORITATIVE FOOTPRINT (2026-07-22): Joel is supplying his own GeoJSON of
 the exact cemetery boundary — it SUPERSEDES the OSM way (proven ~2 acres
 short by the model's density evidence; see docs/boundary_cut/ v4). When his
 file lands: transform via georegistration_transform.json, compose with the

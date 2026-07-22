@@ -1,5 +1,10 @@
 # Oakland Cemetery boundary cut — evidence for approval (v4)
 
+> **SUPERSEDED by FINAL (2026-07-22).** The boundary is now taken from Joel's own hand-traced
+> polygon (`Oakland Cemetery Boundary.geojson`, the authoritative source), which replaces the
+> OSM-derived v4a/v4b footprints entirely. See **`BOUNDARY_CUT_EVIDENCE_FINAL.md`** /
+> **`.html`** and **`boundary_keep_polygon_FINAL.json`**. This v4 document is kept for history only.
+
 **Prepared 2026-07-22. Preparation and evidence only — no gaussians have been cut.**
 
 This is **v4**, built to answer Joel's review of the v3 overlay: *the cemetery polygon is
