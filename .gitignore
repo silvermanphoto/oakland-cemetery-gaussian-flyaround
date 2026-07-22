@@ -6,3 +6,6 @@ renders/
 pilot_runs/
 docs/comparisons/
 Oakland Cemetery 36 Tiles PLY/
+
+# multi-GB Blender scene(s) transferred from Skychief — never commit (regenerable)
+blender_scene/
