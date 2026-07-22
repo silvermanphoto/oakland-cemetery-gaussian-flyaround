@@ -156,6 +156,21 @@ cut ignores) but RE-VERIFY the combined solve's own georeference (GPS vs its
   (autologin + GUI automation; RDP may not bind the 3090 for GL) or do the
   Blender reel interactively and let UE carry the seamless-world goal.
 
+## ARENA PATCH — the fleet's load-bearing fix (proven 2026-07-22)
+
+LichtFeld hardcodes its GPU memory arena to 32 GB VIRTUAL regardless of card
+(upstream issues #792/#1091, open). Cells whose densification+sort cross it
+crash at "FastGS sort-buffer allocation" (forward.cu:60) — cell-DENSITY
+dependent, not camera-count (a 318-cam cell crashed while a 410-cam cell
+trained clean). No flag/env/config exists. FIX: one-line source patch scaling
+the arena to the card's physical memory; rebuilt incrementally on a pod;
+PROVEN by re-training the crash cell past its old failure point (iter 12,900+
+vs crash at 11,968, 12M splats resident). Patched build salvage:
+lf_build_salvage_v2.tgz (Mac pilot_runs + Skychief out_cloud). The patch diff
+is saved in the salvage notes; reproducible in minutes. ALL fleet training
+uses the v2 build. (Also: 3090 verdict final — 24 GB cannot train combined
+cells at 12M native even below the arena ceiling; local training lane closed.)
+
 ## The eleven principles (Joel + lead, locked 2026-07-21 — govern the rebuild)
 
 Joel's five: (1) video-game level — the finest splat the software and photo
