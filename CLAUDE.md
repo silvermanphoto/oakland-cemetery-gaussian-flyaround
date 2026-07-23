@@ -580,3 +580,16 @@ view restore + autoplay (idempotent startup dict). Blender 5.2 API note:
 action.fcurves is GONE — reach fcurves via action.layers[].strips[]
 .channelbags[].fcurves. LIVE ROTATION IS SAFE for the KIRI display (verified
 by test-spin; the disappear-on-rotation scare = missing refresh, not spin).
+HARDWARE LESSON (2026-07-23, cost ~$3.2): A100-SXM4 RunPod containers do NOT
+support the CUDA VMM/cuMem arena — reservation fails and the fallback crashes
+at iter 1 (reproduced 2x; "VMM reservation failed" then cudaErrorInvalidDevice
+in forward.cu). Fleet-safe cards: A100 PCIe (75 GB arena proven) and
+A40/A6000-class (44/48 GB, sm_86 salvage runs without rebuild). NEVER rent
+SXM for this build. TRANSFER LESSON: croc/runpodctl PREALLOCATES the
+destination file at full size (stat == expected while incomplete — never
+trust size alone; hash or member-count it) and cannot resume; for big tars
+prefer rsync (Skychief→Mac→pod, or Mac→pod when the tar is already in Mac
+custody). AUTHORITY LESSON (agent process): a card-CLASS pivot mid-provision
+gets surfaced to the lead BEFORE the first billable second on the new pod,
+even when the class was pre-blessed — silent pod swaps are how Joel ends up
+auditing his own dashboard.
