@@ -238,6 +238,24 @@ master lands ~170M gaussians pre-prune — plan LOD/decimation from that number;
 (d) merge = splat-transform PURE concat, no transform flags; (e) KIRI chunking
 for farm renders: split_ply.py does NOT exist on Skychief — chunk by
 polygon_cut_ply.py central-box crops ≤4M (pattern in the recipe file).
+EDGE-CELL STAGING — PROVEN 2026-07-23, with two catches (both recorded before
+any edge cell trains). Path: stage_tile.ps1 auto-detects ring cells (A/B in
+{0,5}) and copies native-8192 frames BY LIST from the _pool_combined_8192 pool
+per the cell's pre-culled images.txt (cull already applied fleet-wide
+2026-07-21, all 20 PASS) — no resize/prep step, unlike interior. tile_5_5
+prestaged deterministically (tar byte-identical to the 07-21 dry run). Recipe:
+C:\LidargraphCapture\status\EDGE_STAGING_RECIPE_DRAFT.txt. CATCH 1: the
+centroid precheck is VACUOUS for ring cells (half-open crop_aabb 1e6
+sentinels; corners carry the global cloud) — the real gate is the recipe's
+stage-integrity check (pool_miss==0, counts match planN, tar_members==planN+7).
+CATCH 2 (training-soundness, fix dispatched 2026-07-23): edge cells' sparse
+seeds were never cropped on ring-facing sides — mid-edges ~2.7M pts, the 4
+CORNERS carry the FULL 12M global cloud → SFM-init would seed site-wide and
+waste the cap. Fix in flight: crop all 20 edge points3D at source to
+closed-cell rect (+20 m, c2-polygon bbox closes open sides) using
+partition6_combined.py's own interior-crop logic; .pre_seedcrop backups;
+tile_5_5 restaged after. Corner/large-edge tars are bigger — relay+wall run
+longer (tile_5_0 N=701 is the largest edge cell).
 UE RENDER ROUTE — PROVEN 2026-07-23 (principle-4 render gate cleared). UE
 sequence renders on Skychief MUST launch as a CONSOLE-session scheduled task
 (registered against the logged-on console user SID, Interactive, highest priv
