@@ -527,3 +527,15 @@ files with mtime OLDER than the launch (the fresh set is the live run's —
 never touch it); want >=25 GB free. Both pods pruned live (bigcard 48→12 GB
 cache, lane5 39→14 GB) with trainers running — proven safe. SENTINEL
 AUTO-STOP ARMED 2026-07-23 ~09:10Z (both pods at real GPU; task #11).
+CENSUS NEAR-MISS (2026-07-23): the fleet queue was seeded AFTER three cells
+already existed and silently held only 33 of 36 — tile_2_4 (the PILOT cell
+Joel judged to lock the recipe; its pilot125 PLY is byte-format-identical to
+fleet tiles, 20k/mrnf/12M/SH3/SFM verified in its log) plus the pre-queue
+tile_1_1/1_2. Caught by a grid-vs-queue diff at 11 banked; the pilot PLY was
+hash-verified-copied to out_cloud\fleet\tile_2_4_12M_c2.ply and all three
+got DONE census lines — fleet_queue.txt is now the COMPLETE 36-cell census;
+counts come from the file, never memory. Relay lesson (bigcard advance #4):
+croc hashes the whole tar before its room opens — a cold 14+ GB tar means
+~6 min of "room not ready" (NORMAL); one continuous sender, receiver retries,
+never restart the sender; runpodctl may emit a bare code (no "code is:"
+prefix). Both in the procedure addenda.
