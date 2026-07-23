@@ -518,3 +518,12 @@ regenerable). PUBLIC GitHub repo `silvermanphoto/oakland-cemetery-gaussian-flyar
 (Joel's explicit call, 2026-07-17 — an exception to the private default; the
 README is written in his voice for a public audience). Never force-push;
 never commit secrets or multi-GB binaries.
+TRAINER-CACHE DISK BOMB (2026-07-23, caught at 2.1 GB free mid-run):
+LichtFeld caches decoded 8192 JPEGs at /tmp/LichtFeld/pipeline_cache/
+ppl_j2k_unified_v1, ~14.8 GB PER TILE, never auto-pruned — a multi-cell pod
+starves its own final PLY+checkpoint write (~6 GB). Standard hygiene now in
+the advance procedure: after each launch confirms iterations, delete cache
+files with mtime OLDER than the launch (the fresh set is the live run's —
+never touch it); want >=25 GB free. Both pods pruned live (bigcard 48→12 GB
+cache, lane5 39→14 GB) with trainers running — proven safe. SENTINEL
+AUTO-STOP ARMED 2026-07-23 ~09:10Z (both pods at real GPU; task #11).
