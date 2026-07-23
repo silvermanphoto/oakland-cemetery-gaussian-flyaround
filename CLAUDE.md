@@ -221,6 +221,14 @@ Cap-window ops lesson (2026-07-22): Joel's weekly Claude cap silences EVERY
 Claude layer at once (lead, pulse, heartbeat sessions, agents) — treat the
 weekly reset as a hard operational boundary during multi-day metered runs;
 the pod-side idle self-guards + launchd sentinel are the layers that survive.
+ADDENDUM (2026-07-23): the same all-Claude-layers-quiet outage can also happen
+WITHOUT the cap — a transient service/dispatch gap silenced the heartbeat AND
+the in-session pulse for ~00:24–02:09Z, Mac awake (caffeinate held) the whole
+time. The mitigation proved itself: pod guards stayed armed, both cards
+trained through the gap at 100%, zero loss. Design rule stands: any Claude
+session is an unreliable watcher; money-guarding logic lives pod-side (or
+launchd), and every pulse re-verifies lanes from ground truth, never from the
+last Claude-side status.
 WHOLE-SITE SCENE PATH (proven 2026-07-22): KIRI's import hangs on a single
 PLY somewhere above ~5.15M gaussians (loads ~34 GB then never returns — not
 OOM, not disk). Whole-site scenes therefore import as ~4M-gaussian CHUNKS
