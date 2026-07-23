@@ -551,3 +551,14 @@ tile_2_4 note: boundaries continuous, but mid-field density runs ~17-21%
 lower than fleet neighbors — if Joel's eye ever finds that cell softer in
 renders, retraining 2_4 through the fleet loop is a cheap known fix (~$1-2
 GPU). Scripts: C:\rolling_assembly\.
+UE FULL-RES RENDER FIX (2026-07-23): the 888x500 defect's root cause was the
+project's saved GameUserSettings.ini pinning 1066x600 borderless, which
+outranks -ResX/-ResY and then clamps to the console desktop (1024x768). The
+reusable defense for ANY render on Skychief: launch with -ForceRes (skips the
+desktop clamp) + runtime -ini:GameUserSettings overrides (ResolutionSizeX/Y,
+FullscreenMode=2) + -RenderOffscreen; no project INI edits needed. Proven:
+480/480 frames at true 1920x1080 24 fps in ~4.5 min warm on the 3090
+(scripts C:\UE_scripts\render_fullres_seq.ps1 + launch_fullres_console.ps1;
+frames Saved\VideoCaptures\ue_fullres\). The render pipeline for the reel is
+now fully proven at target quality; remaining for principle 4: real reel
+path (compose per SHOT GRAMMAR), pawn feel pass (Joel), v2 tile swap-in.
