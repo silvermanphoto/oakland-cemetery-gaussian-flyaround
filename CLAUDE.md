@@ -539,3 +539,15 @@ croc hashes the whole tar before its room opens — a cold 14+ GB tar means
 ~6 min of "room not ready" (NORMAL); one continuous sender, receiver retries,
 never restart the sender; runpodctl may emit a bare code (no "code is:"
 prefix). Both in the procedure addenda.
+ROLLING ASSEMBLY LIVE (2026-07-23): all delivered cells get their core-cell
+cut pre-computed into out_cloud\assembly_cuts\ (MANIFEST.json = the running
+fusion ledger: sha256, counts, bounds, seam table) — final fusion is
+concat-only for done cells. 12 cells cut+verified (61.5M gaussians in the
+done-set; fractions 0.396-0.461; canary tiles reproduced byte-faithfully).
+Seam sweep: 15/16 pass; V 1_4|2_4 ratio 0.689 DIAGNOSED BENIGN (a natural
+~15 m open-ground trough near the seam fooled the flank probes; true
+boundary continuity 1.034 — recorded in seam_diag.json). Pilot-origin
+tile_2_4 note: boundaries continuous, but mid-field density runs ~17-21%
+lower than fleet neighbors — if Joel's eye ever finds that cell softer in
+renders, retraining 2_4 through the fleet loop is a cheap known fix (~$1-2
+GPU). Scripts: C:\rolling_assembly\.
