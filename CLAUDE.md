@@ -238,6 +238,20 @@ master lands ~170M gaussians pre-prune — plan LOD/decimation from that number;
 (d) merge = splat-transform PURE concat, no transform flags; (e) KIRI chunking
 for farm renders: split_ply.py does NOT exist on Skychief — chunk by
 polygon_cut_ply.py central-box crops ≤4M (pattern in the recipe file).
+UE RENDER ROUTE — PROVEN 2026-07-23 (principle-4 render gate cleared). UE
+sequence renders on Skychief MUST launch as a CONSOLE-session scheduled task
+(registered against the logged-on console user SID, Interactive, highest priv
+— the same pattern as the Blender farm); the S4U route inits the engine fully
+(545 s cold, shaders compile) then freezes FOREVER at viewport creation (log
+dead-ends on a LogSlate font-face line) — no GL without the interactive
+desktop. Console route: passed that exact line in ~2 min warm and rendered
+120/120 proof frames of OaklandFlyover_Example (lead-verified real imagery:
+obelisk + canopy + engine sky). Reusable launcher + poll script:
+C:\UE_scripts\. GOTCHA for the final reel: the legacy
+AutomatedLevelSequenceCapture IGNORES command-line resolution flags and
+follows the desktop size (asked 1920x1080, got 888x500) — set output size in
+the movie-capture settings and drop windowed mode instead. Frames:
+H:\2026 Files\26-029 UE\OaklandFlyaround\Saved\VideoCaptures\ue_proof.
 ADDENDUM (2026-07-23): the same all-Claude-layers-quiet outage can also happen
 WITHOUT the cap — a transient service/dispatch gap silenced the heartbeat AND
 the in-session pulse for ~00:24–02:09Z, Mac awake (caffeinate held) the whole
