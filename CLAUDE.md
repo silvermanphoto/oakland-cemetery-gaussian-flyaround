@@ -238,6 +238,31 @@ master lands ~170M gaussians pre-prune — plan LOD/decimation from that number;
 (d) merge = splat-transform PURE concat, no transform flags; (e) KIRI chunking
 for farm renders: split_ply.py does NOT exist on Skychief — chunk by
 polygon_cut_ply.py central-box crops ≤4M (pattern in the recipe file).
+GUARD-STACK NIGHT (2026-07-23, ~$2.5 idle across two incidents — every layer
+audited). What failed, in one night: (1) THREE advance agents parked
+themselves "awaiting a wake" that cannot come (their own background jobs do
+not survive their turn) — the SendMessage wake-correction recovers them, but
+watchers armed in an agent's context DIE WITH THE AGENT: three watchers went
+silent. (2) The pod idle-guard's stop ladder (kill -9 1 → poweroff → halt)
+is IMPOTENT inside RunPod containers — PID 1 ignores SIGKILL from inside the
+namespace, no systemd, halt unpermitted; it fired live at 06:48Z and failed
+("no_stop_method"). Working ladder (patched on both pods, .pre_stopfix
+backups): pkill -9 the trainer + STOPPED_BY_GUARD marker, then `kill -9 -1`
+(namespace-wide kill exits the container → Secure pod stops, disk kept).
+(3) The launchd meter-sentinel was alert-ONLY, its idle re-alert had a 2-hour
+lockout (one missed 2 a.m. ping = two silent hours), and it logged to
+sentinel.log not meter-sentinel.log. REBUILT: logs to meter-sentinel.log,
+re-alerts every 30 min, and at ~50 min of consecutive-zero GPU on a fleet-*
+pod it STOPS the pod via the API (verified podStop mutation; fleet-only,
+at-most-once, never on nonzero GPU, never when the API itself is blind;
+doorbell messages in plain human sentences). The auto-stop arms via
+`touch ~/.claude/sentinel/autostop.armed` — arm only when no pod is
+legitimately at 0% (mid-delivery/relay). API telemetry note: every "0% GPU"
+reading checked tonight was TRUE (a finished trainer, not API noise) — trust
+it as a signal, verify by ssh before acting manually. OPERATING TRUTH: the
+conductor pulse (ground-truth probes every ~21 min) and the sentinel are the
+reliable layers; per-agent watchers and "a notification will come" are not —
+advances are now stationed BEFORE completion or dispatched by the pulse.
 PERIMETER AMENDED 2026-07-23 (Joel's directive, screenshots): every
 street-bordered stretch now runs to the FAR sidewalk's outer edge (Memorial
 Dr S, Oakland Ave W, Boulevard E — full road + opposite sidewalk in, buildings
