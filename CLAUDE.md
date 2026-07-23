@@ -248,13 +248,19 @@ C:\LidargraphCapture\status\EDGE_STAGING_RECIPE_DRAFT.txt. CATCH 1: the
 centroid precheck is VACUOUS for ring cells (half-open crop_aabb 1e6
 sentinels; corners carry the global cloud) — the real gate is the recipe's
 stage-integrity check (pool_miss==0, counts match planN, tar_members==planN+7).
-CATCH 2 (training-soundness, fix dispatched 2026-07-23): edge cells' sparse
-seeds were never cropped on ring-facing sides — mid-edges ~2.7M pts, the 4
-CORNERS carry the FULL 12M global cloud → SFM-init would seed site-wide and
-waste the cap. Fix in flight: crop all 20 edge points3D at source to
-closed-cell rect (+20 m, c2-polygon bbox closes open sides) using
-partition6_combined.py's own interior-crop logic; .pre_seedcrop backups;
-tile_5_5 restaged after. Corner/large-edge tars are bigger — relay+wall run
+CATCH 2 (training-soundness) — FIXED 2026-07-23 before any edge cell trained:
+edge cells' sparse seeds were never cropped on ring-facing sides (mid-edges
+~2.7M pts; the 4 CORNERS carried the FULL 12M global cloud → SFM-init would
+have seeded site-wide and wasted the cap). All 20 edge points3D cropped at
+source to closed-cell rect (+20 m; c2-polygon bbox x=[-288,388] z=[-183,357]
+closes the 1e6 open sides) — corners now 0.29–0.76M, interior-like; format
+matches partition6_combined.py's DECOUPLED shape (simplified 8-field points,
+NO track refs, so cropping cannot dangle) — that decoupling is why seed crops
+are always safe here. Backups points3D.txt.pre_seedcrop alongside; per-cell
+record edge_seedcrop_report.json; tile_5_5 restaged on the cropped seed (tar
+4,247,498,752 B, all gates PASS). NOTE tile_5_5 is genuinely the sparsest
+cell (95k seed pts, 175 frames — its NE rect lies mostly outside the site's
+diagonal boundary); expect a modest corner there, not a defect. Corner/large-edge tars are bigger — relay+wall run
 longer (tile_5_0 N=701 is the largest edge cell).
 UE RENDER ROUTE — PROVEN 2026-07-23 (principle-4 render gate cleared). UE
 sequence renders on Skychief MUST launch as a CONSOLE-session scheduled task
