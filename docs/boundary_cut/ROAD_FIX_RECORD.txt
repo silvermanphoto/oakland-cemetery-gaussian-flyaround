@@ -1,0 +1,60 @@
+OAKLAND CEMETERY - PERIMETER BOUNDARY FIX (road_fix) - RECORD
+=============================================================
+Date: 2026-07-23   Machine: Skychief (CPU; RTX 3090 idle throughout)   Frame: 300ft-solve (FINAL)
+
+WHY
+  Joel: Memorial Drive was cut off mid-road (far half of road + opposite sidewalk missing, ragged
+  ghost blobs at the cut). Then expanded: Oakland Ave (west) crudely cut too; floaters beyond the
+  train tracks. "Revisit the perimeter and clean the entire perimeter. Err on adding, not
+  subtracting. Do not add new tall buildings."
+
+WHAT CHANGED (per side, all derived from master_dense point data projected top-down)
+  SOUTH  Memorial Drive : line moved south to the outer edge of the far sidewalk, just north of the
+                          buildings across the street. Entire road + opposite sidewalk now included.
+  WEST   Oakland Avenue : line moved west to the far sidewalk, staying east of the buildings.
+  EAST   Boulevard (N of the SE building cluster): line moved out to the far side of the road.
+  NORTH  Railroad       : line pulled IN to hug the far edge of the CONTINUOUS track bed. Every
+                          track + rolling stock kept; the detached floater debris beyond the yard
+                          now falls outside. (Only tightening allowed - verified no track content lost.)
+  KEPT AS-IS: the 13 hand-traced corners (anchors), the 7 building holes, and the SE building
+             notches (corner 10 -> corner 13) so no approved building subtraction was undone.
+
+METHOD
+  - master_dense.ply (H:\2026 Files\26-002 Oakland Cemetery Splat\deliver\, 51,584,891 gaussians)
+    projected top-down at 0.25 m/px (natural color + point density + top height).
+  - Street lines: march outward from inside, include ground (<=3 m tall: road/sidewalk/parking/cars)
+    up to the first tall building (>3 m) or a road-corridor cap; +1.5 m margin; hug the building
+    face where one abuts. Rail line: far edge of continuous dense content, +4 m; sheds sparse floaters.
+  - The proven cutter (polygon_cut_ply.py) and splitter (split_ply.py) were reused unchanged.
+
+VERIFY (polygon)
+  self-intersections 0 ; keep area 260,832 -> 268,387 m2 (+2.9%) ; rail dense content preserved
+  (dense cells north band: 44,780 -> 45,454, i.e. none shaved) ; tall newly-inside are tree rows /
+  canopies (largest connected mass 96 m2), no building mass added.
+  c2 re-expression (combined-solve frame) via the proven 300ft->combined similarity (scale 1.006591,
+  rot -1.2230 deg, shift [8.145,-10.375]); residual on unchanged vertices 0.0000 mm (reproduces the
+  assembly gate exactly).
+
+RE-CUT (whole-site pipeline, re-run of the recorded chain with the amended FINAL polygon)
+  cut  : master_dense -> whole_cut_roadfix.ply  kept 45,180,405 / 51,584,891 = 87.58% (old 85.10%)
+         bounds X[-302.84,378.37] Z[-176.47,363.20] (extended S to -176, W to -303; rail max Z same).
+  decimate : splat-transform -g cpu --no-tty --memory -d 16,000,000 -> whole_site_16M_roadfix.ply
+  chunk    : split_ply.py 4 -> chunk_00.._03_roadfix.ply (4x4M) delivered to Mac (old chunks kept).
+
+FILES
+  Amended polygons (git-tracked, same filenames; old preserved as .pre_road_fix):
+    docs/boundary_cut/boundary_keep_polygon_FINAL.json      (300ft frame - cuts master_dense/v1)
+    docs/boundary_cut/boundary_keep_polygon_FINAL_c2.json   (combined frame - cuts v2 fleet tiles)
+  Skychief working copies: C:\boundary_cut\ (same filenames, .pre_road_fix backups alongside)
+  Evidence: docs/boundary_cut/road_fix_renders/EVIDENCE_perimeter_overview.png (+ memorial/oakland/rail insets)
+
+--- COMPLETION (2026-07-23 02:58) ---
+decimate: whole_site_16M_roadfix.ply = 3,968,001,533 B = 16,000,000 x 248 + hdr (peak 10.02 GB,
+  27m37s). NOTE: first launch via Start-Process died in ~3s when the ssh session closed (Windows
+  killed the detached tree); relaunched as an S4U scheduled task (survives ssh) -> succeeded, task
+  exit 0. LESSON: long Skychief jobs must run as a scheduled task, NOT Start-Process over ssh.
+chunk: split_ply.py 4 -> chunk_00.._03.ply, each 4,000,000 (sum 16,000,000 OK), combined bounds
+  X[-302.7,378.3] Z[-176.5,362.9] (perimeter extension present, geometry unmoved).
+delivered: /Users/joelsilverman/.../26-029 .../blender_scene/chunk_00.._03_roadfix.ply,
+  each 992,001,532 B, sha256 MATCH both ends. Old chunks (baked in the v1 .blend) untouched.
+  Lead swaps the new chunks into Blender; NO Blender import done here.

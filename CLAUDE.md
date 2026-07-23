@@ -238,6 +238,23 @@ master lands ~170M gaussians pre-prune — plan LOD/decimation from that number;
 (d) merge = splat-transform PURE concat, no transform flags; (e) KIRI chunking
 for farm renders: split_ply.py does NOT exist on Skychief — chunk by
 polygon_cut_ply.py central-box crops ≤4M (pattern in the recipe file).
+PERIMETER AMENDED 2026-07-23 (Joel's directive, screenshots): every
+street-bordered stretch now runs to the FAR sidewalk's outer edge (Memorial
+Dr S, Oakland Ave W, Boulevard E — full road + opposite sidewalk in, buildings
+still out); the railroad stretch hugs the far edge of the CONTINUOUS track
+bed (every track/car kept — dense-cell check 44,780→45,454 — detached
+floaters beyond the yard culled). Keep area 260,832→268,387 m^2 (+2.9%); his
+13 corners + 7 building holes + SE notches untouched; 0 self-intersections;
+c2 re-expression residual 0.0000 mm on unchanged vertices. BOTH
+boundary_keep_polygon_FINAL.json and _FINAL_c2.json are amended IN PLACE
+(.pre_road_fix backups alongside; ROAD_FIX_RECORD.txt tells the story) — the
+amended c2 is the blessed cut for the v2 fusion. master_dense re-cut
+85.10%→87.58% kept → 16M decimate → chunk_00..03_roadfix.ply (blender_scene/,
+992,001,532 B each) → swapped into "2026 Oakland Splat Blender v1.blend"
+(old chunks deleted from the scene, orphans purged, saved, .blend1 dupe
+removed). Evidence renders: renders/perimeter_fix/ (local). OPS LESSON: long
+Skychief jobs (decimate etc.) MUST run as a scheduled task, not Start-Process
+over ssh — Windows kills the detached tree ~3 s after the ssh session closes.
 EDGE-CELL STAGING — PROVEN 2026-07-23, with two catches (both recorded before
 any edge cell trains). Path: stage_tile.ps1 auto-detects ring cells (A/B in
 {0,5}) and copies native-8192 frames BY LIST from the _pool_combined_8192 pool
