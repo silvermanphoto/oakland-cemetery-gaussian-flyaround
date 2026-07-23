@@ -221,6 +221,23 @@ Cap-window ops lesson (2026-07-22): Joel's weekly Claude cap silences EVERY
 Claude layer at once (lead, pulse, heartbeat sessions, agents) — treat the
 weekly reset as a hard operational boundary during multi-day metered runs;
 the pod-side idle self-guards + launchd sentinel are the layers that survive.
+ASSEMBLY CANARY — PASSED 2026-07-23 (principle-3 seam risk retired on real v2
+data). The delivered 2x2 NW block (tiles 1_1/1_2/2_1/2_2, 12M each) was cut to
+half-open core cells, merged, and seam-checked: density ratios 0.90-1.05 across
+all four internal seams (pass band 0.7-1.4), ZERO duplicate/double-owned
+gaussians, and rendered crossings visually seamless (lead-reviewed stills in
+scratchpad/assembly_canary/ + H:\...\out_cloud\assembly_canary\). THE RECIPE is
+recorded at C:\LidargraphCapture\status\ASSEMBLY_RECIPE_DRAFT.txt — full-36
+assembly is a re-run, not a derivation. Load-bearing facts: (a) authoritative
+cell bounds = H:\...\tiles6_combined\tile_A_B\crop_aabb.json (cross-confirmed
+against edge_cull.py's hardcoded cut lines; cell_bounds_cache.json is NOT the
+partition — it's ground-height analysis, 0.4-0.8 m off); (b) half-open cells
+via 1e-6 inward nudge of each tile's MAX edges only; (c) core-cut keeps ~40%
+of a 12M tile (the ~20% training overlap is removed) → full 36-tile fused
+master lands ~170M gaussians pre-prune — plan LOD/decimation from that number;
+(d) merge = splat-transform PURE concat, no transform flags; (e) KIRI chunking
+for farm renders: split_ply.py does NOT exist on Skychief — chunk by
+polygon_cut_ply.py central-box crops ≤4M (pattern in the recipe file).
 ADDENDUM (2026-07-23): the same all-Claude-layers-quiet outage can also happen
 WITHOUT the cap — a transient service/dispatch gap silenced the heartbeat AND
 the in-session pulse for ~00:24–02:09Z, Mac awake (caffeinate held) the whole
