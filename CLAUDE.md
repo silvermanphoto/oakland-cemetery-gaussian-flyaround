@@ -564,12 +564,17 @@ now fully proven at target quality; remaining for principle 4: real reel
 path (compose per SHOT GRAMMAR), pawn feel pass (Joel), v2 tile swap-in.
 BLENDER SCENE v1 — TURNTABLE + PINNED VIEW (Joel, 2026-07-23): the scene now
 auto-opens on Joel's pinned obelisk framing (ORTHO; numbers live in the
-embedded guard text v2 DEFAULT_VIEW) and auto-plays a 5 RPM record-style
-spin: empty "Oakland_Turntable" at the obelisk axis (-34.736, 4.554, z-any),
+embedded guard text v2 DEFAULT_VIEW) and auto-plays a 1 RPM record-style
+spin (Joel corrected 5->1 RPM same day): empty "Oakland_Turntable" at the
+GEOREFERENCED obelisk axis (-0.091, -12.042) — derived from Joel's GPS point
+(33.74802655368586, -84.37208004353286) through the boundary transform in
+boundary_keep_polygon_FINAL.json (transform_model_to_world inverted), then
+VISUALLY confirmed top-down ON the column (his view-center guess was 37 m
+off — always georeference + eye-confirm pivots, never trust a view center),
 Oakland_Root parented under it (matrix_parent_inverse = T(-obelisk) EXACTLY —
 computed, never read from a just-set matrix_world: reading it stale shifted
 the whole model once), camera UN-parented so it never rides the spin, Z
-keyed 0 to -360 deg linear over 288 frames @24fps + CYCLES modifier,
+keyed 0 to -360 deg linear over 1440 frames @24fps (60 s/rev) + CYCLES,
 scene sync_mode FRAME_DROP (wall-clock 5 RPM). Guard v2 = clamps + pinned
 view restore + autoplay (idempotent startup dict). Blender 5.2 API note:
 action.fcurves is GONE — reach fcurves via action.layers[].strips[]
