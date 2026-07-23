@@ -562,3 +562,16 @@ FullscreenMode=2) + -RenderOffscreen; no project INI edits needed. Proven:
 frames Saved\VideoCaptures\ue_fullres\). The render pipeline for the reel is
 now fully proven at target quality; remaining for principle 4: real reel
 path (compose per SHOT GRAMMAR), pawn feel pass (Joel), v2 tile swap-in.
+BLENDER SCENE v1 — TURNTABLE + PINNED VIEW (Joel, 2026-07-23): the scene now
+auto-opens on Joel's pinned obelisk framing (ORTHO; numbers live in the
+embedded guard text v2 DEFAULT_VIEW) and auto-plays a 5 RPM record-style
+spin: empty "Oakland_Turntable" at the obelisk axis (-34.736, 4.554, z-any),
+Oakland_Root parented under it (matrix_parent_inverse = T(-obelisk) EXACTLY —
+computed, never read from a just-set matrix_world: reading it stale shifted
+the whole model once), camera UN-parented so it never rides the spin, Z
+keyed 0 to -360 deg linear over 288 frames @24fps + CYCLES modifier,
+scene sync_mode FRAME_DROP (wall-clock 5 RPM). Guard v2 = clamps + pinned
+view restore + autoplay (idempotent startup dict). Blender 5.2 API note:
+action.fcurves is GONE — reach fcurves via action.layers[].strips[]
+.channelbags[].fcurves. LIVE ROTATION IS SAFE for the KIRI display (verified
+by test-spin; the disappear-on-rotation scare = missing refresh, not spin).
