@@ -733,37 +733,25 @@ radius ~123.37 m, height ~89.89 m, verified constant); 4–9 open. Pin more via
 MCP: `sys.modules['oakland_view_guard'].capture_view(slot, label)`. The v5
 "stale line-27 comment" nit was fixed in the v6 cycle.
 
-A100 cuMem VMM IS A PER-HOST LOTTERY (2026-07-24, cost ~$4 to learn): the
-arena's 75 GB cuMemAddressReserve succeeds on SOME RunPod A100 hosts and
-FAILS on others (both PCIe and SXM) — the original bigcard host worked, two
-later A100s (one PCIe, one SXM) crashed at iter 1 ("VMM reservation failed"
--> broken fallback -> cudaErrorInvalidDevice). A40/A6000 hosts don't hit it.
-It is HOST/container config, not the GPU model. EFFICIENCY FIX: roll A100s
-with a 10-second cuMem probe FIRST (scratchpad/vmm_roll.sh + bigcard/probe.cu
-— rents, boots, tests cuMemAddressReserve at 32..80 GB aligned, KEEPS on the
-75 GB OK line, TERMINATES on FAIL) so a dud host costs ~$0.10 not the ~$1
-of a full rebuild+transfer before discovering it at iter 1. probe.cu also
-re-confirms the granularity law: RAW total_mem reserves FAIL "invalid
-argument"; 1 GB/2 MB-ALIGNED sizes succeed (the arena patch aligns down).
-nvcc isn't on PATH in a fresh nvidia/cuda:devel container — use
-/usr/local/cuda/bin/nvcc + -L/usr/local/cuda/lib64/stubs.
-
-CORRECTION (2026-07-24, same night): the "A100 cuMem VMM per-host lottery" note
-ABOVE IS WRONG — I misdiagnosed it THREE times (host-detach, then SXM-only, then
-per-host-lottery). TRUE ROOT CAUSE, evidence-proven: arena_patch.diff sets
-`config.virtual_size = total_mem` (RAW). On A100 80GB, total_mem = 85,095,874,560 B
-is NOT a multiple of the 2 MB cuMem min-granularity (÷2097152 = 40577.0004), so
-`cuMemAddressReserve` rejects it ("invalid argument") → the broken traditional-alloc
-fallback crashes at forward.cu:179 iter 1. It fails on ALL A100s, not a random
-subset; A40 lanes work only because THEIR total_mem is coincidentally 2 MB-aligned.
-The probe/vmm_roll.sh is still a useful pre-flight but the RIGHT signal is its
-"exact arena values as-passed" block: raw total_mem FAILs, aligned OKs — and the
-ORIGINAL working bigcard used virtual=75 GB (aligned), which is why it succeeded.
-FIX (fleet-wide, safe — A40 already-aligned so a no-op there): align virtual_size
-DOWN to the min granularity before the reserve: `virtual_size = (total_mem/gran)*gran`
-(gran = cuMemGetAllocationGranularity MIN = 2 MB). virtual_size is an ADDRESS
-reservation (not physical commit — the arena commits only ~10-42 GB physical), so
-reserving ~79 GB aligned is fine and leaves ample physical for the ~5 GB sort
-buffer. Applied on the staged pod 2zf5sj8ce44rr7 (VMM-capable, build+tile ready).
-LESSON: when a failure "reproduces identically across hosts," suspect OUR code,
-not the hardware — I burned ~$4 and a night blaming the cards for our own patch bug.
+A100 ITER-1 "VMM reservation failed" CRASH — OUR PATCH BUG, not the hardware
+(root-caused 2026-07-24 after ~$4 and 3 wrong guesses — host-detach, SXM-only,
+per-host-lottery — all wrong; the real cause is one line of ours). arena_patch
+sets the arena's `virtual_size = total_mem` (RAW). On A100 80GB,
+total_mem = 85,095,874,560 B is NOT a multiple of the 2 MB cuMem MIN granularity
+(÷2097152 = 40577.0004), so `cuMemAddressReserve` rejects it "invalid argument"
+→ the broken traditional-alloc fallback crashes at forward.cu:179 on iter 1. It
+fails on EVERY A100 (PCIe and SXM); A40/A6000 lanes only work because THEIR
+total_mem is coincidentally 2 MB-aligned. FIX (fleet-wide, safe — a no-op on
+already-aligned A40s): align the reservation DOWN before the reserve,
+`virtual_size = (total_mem/gran)*gran` (gran = cuMemGetAllocationGranularity MIN
+= 2 MB). virtual_size is only an ADDRESS reservation (physical commit is just
+~10-42 GB), so reserving the aligned ~79 GB is fine and leaves ample room for the
+~5 GB sort buffer; the original working bigcard used an aligned 75 GB, which is
+why it alone succeeded. Corrected patch saved to scratchpad/fleet/
+arena_patch_aligned.diff. PRE-FLIGHT (cheap insurance): scratchpad/vmm_roll.sh +
+bigcard/probe.cu rents an A100, boots, and tests cuMemAddressReserve in ~10 s —
+its "exact arena values as-passed" block is the real signal (raw total_mem FAILs,
+aligned OKs). Gotcha: nvcc isn't on PATH in a fresh nvidia/cuda:devel container —
+use /usr/local/cuda/bin/nvcc + -L/usr/local/cuda/lib64/stubs. STANDING LESSON:
+when a failure "reproduces identically across different machines," suspect OUR
+code first, not the hardware.
