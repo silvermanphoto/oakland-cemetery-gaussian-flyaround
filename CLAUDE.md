@@ -628,3 +628,35 @@ RESUME-BLOCK IS COMMON: `podResume` fails "not enough free GPUs on host" often
 (hit 3x this night) — a stopped pod is pinned to its original host. Prefer
 keeping a proven cheap pod WORKING (launch its next cell) over stop/resume;
 stopping risks losing the lane to a full host.
+
+## The 3D/not-3D popping — SOLVED 2026-07-24 (v4 guard)
+
+Root cause (4th diagnosis, the correct one — earlier three were incomplete):
+the live 16M render is a GLSL POST_VIEW draw handler (`draw_gaussians`,
+`bpy.gaussian_draw_handle`) whose `update_depth_sorting()` re-sorts only when
+`bpy.gaussian_needs_depth_sort` is set OR the camera POSITION crossed
+SORT_THRESHOLD. In this ORTHO scene, ORBIT barely changes derived position so
+it NEVER auto-sorted (→ stale back-to-front order → the flat melt, worst at
+grazing angles); PAN/ZOOM did move position so it re-sorted EVERY frame at
+~2.9 s (→ frozen). So the real prior state was orbit=fast+mush,
+pan=crisp+frozen. Sort cost at 16M: argsort ~2.0 s dominates (~2.9 s total,
+main-thread).
+
+The fix (embedded scene text `oakland_view_guard.py` v4 — NO addon files
+patched; durable copy renders/ghosting_fix/): (1) suppress the addon's
+position-triggered auto-sort by re-running `sna_viewport_render_A3941(sh,1e12)`
++ pinning r2_sort_threshold=1.0 → every drag stays fast (~90 ms/frame, 35x);
+(2) a 0.15 s watcher tracks each viewport's view-matrix AND splat world
+transforms, and ~0.45 s after stillness fires EXACTLY ONE re-sort (once on
+load, never during turntable playback, never overlapping); (3) the 2 s sort
+runs on a daemon worker thread (numpy drops the GIL), only the ~0.36 s GPU
+upload on the main thread — viewport never freezes (proven: 47 frames drawn
+at ~88 ms while the worker sorted). Runtime switches: `bpy._oakland_async_off`
+= True forces the simpler blocking path; diagnostic counters
+`bpy._oakland_sort_fires`/`_oakland_sort_applies`. LEAD-VERIFIED at a grazing
+angle: dramatic melt → one re-sort → fully crisp (renders/ghosting_fix/ proof).
+KIRI is at 5.0.0 (latest, no sorting fix upstream); the addon's LQ "dithered
+alpha" mode does NOT bypass the GLSL sort, so there is no order-independent
+motion mode — sort-on-rest is the real and only fix. Chaos Vantage 3 (GPU
+per-frame sort + splat RELIGHTING as of v3.3) is the alternative if a
+never-flat live viewer is wanted (free tier on the 3090; not set up yet).
