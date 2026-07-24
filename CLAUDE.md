@@ -660,3 +660,28 @@ alpha" mode does NOT bypass the GLSL sort, so there is no order-independent
 motion mode — sort-on-rest is the real and only fix. Chaos Vantage 3 (GPU
 per-frame sort + splat RELIGHTING as of v3.3) is the alternative if a
 never-flat live viewer is wanted (free tier on the 3090; not set up yet).
+
+## Prime-directive accountability — 2026-07-24 (Joel's teachable moment)
+
+Joel measured 40-50% paid-GPU overhead across the fleet's first 50 hours and
+called it what it is: a failure to honor the prime directive. ROOT CAUSE, named
+plainly: THE PAID GPU WAITED FOR CLAUDE — for collection, for the next cell,
+for a live agent — and every Claude outage (cap, restart, compaction, busy
+lead) became billed idle time. THE ARCHITECTURAL FIX (deployed this night):
+1. POD-SIDE CHAINING (run_chain.sh): each pod holds its next 1-2 cells
+   pre-extracted and rolls cell-to-cell the moment a PLY lands — zero hand-off
+   gap, keeps training through ANY Claude outage. Finished PLYs get .ready
+   markers; delivery happens OFF the GPU's critical path. The pulse's job
+   becomes feeding pods 2-deep and collecting .ready files — never gating the
+   GPU.
+2. SEPARATION OF DUTIES on the billing guard: the LEAD registers pods in the
+   guard (attended windows, lead-written); agents provision/train/deliver and
+   never touch guard files. (Two agents refused briefs and rang Joel's phone
+   over guard-adjacent instructions — the refusals were correct signal;
+   "never reference the guard" reads as evasion even when meant as scope.
+   Briefs must say "the guard is active and lead-managed", never "avoid it".)
+3. PRE-FLIGHT SPEC GATE before any billable second: card sub-type (A100 PCIe
+   never SXM), free-GPU availability, image tag — read-only verified.
+4. MEASURABLE TARGET: <10% GPU-idle overhead for the remainder of the fleet,
+   measured as (wall time − training time) per delivered cell from ledger
+   stamps, reported at every phase gate.
