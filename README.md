@@ -23,6 +23,16 @@ the 36-tile set in [docs/LIVE_URLS_36_tiles.md](docs/LIVE_URLS_36_tiles.md).
 Start with the center tile: the Confederate Obelisk sits at its orbit
 center, which is no accident.
 
+There is also a full interactive scene of the whole cemetery for Blender —
+`blender_scene/2026 Oakland Splat Blender v1.blend` — that opens framed on
+the obelisk and can spin the entire site slowly around it like a record on a
+turntable. It carries the whole model at once (sixteen million points) with
+navigation kept upright and inside the grounds, and it is where the lighting
+and camera ideas get tried before they go to the game engine. The boundary
+that decides what is kept — every surrounding street out to the far sidewalk,
+the whole rail yard, no outside buildings — was traced by hand and is the
+same line used for every version of the model.
+
 ## How it was built
 
 Everything below runs on one RTX 3090 in a Windows tower, driven remotely.
