@@ -703,24 +703,35 @@ lead rented A100 lt777es87ebb7p @ $1.39, agent did setup only. NEVER write an
 agent brief that says "don't touch / ignore the guard" — that reads as evasion
 and a correct agent refuses; say "the guard is active and lead-managed."
 
-## Guard v5 — viewpoint bookmarks (Blender session, 2026-07-24)
+## Guard v6 — viewpoint bookmarks + shot engine (Blender session, 2026-07-24)
 
-Number-row keys 1–9 over the 3D viewport jump to saved framings. Data lives in
-a SEPARATE embedded text `oakland_viewpoints.json` (read fresh on every press —
+Number-row keys 1–9 over the 3D viewport are Joel's SHOT keys. Data lives in a
+SEPARATE embedded text `oakland_viewpoints.json` (read fresh on every press —
 edit it and the next press obeys, no guard reload); mechanism is appended to
-guard v5 (`oakland_view_guard.py`, all three v4 jobs untouched; durable copies
-renders/ghosting_fix/oakland_view_guard_v5.py + viewpoints_seed.json kept
-identical to the installed text). Jumps SNAP, take no undo step, and need no
-manual re-sort (sort-on-rest fires ~0.45 s after arrival). Re-running the guard
-yields exactly 9 keymap items — never duplicates. JOEL'S OVERRIDE 2026-07-24:
-slot 1 "Brick avenue from overhead" is ALSO the opening view (DEFAULT_VIEW
-updated); the obelisk opening framing is RETIRED everywhere — its numbers are
-preserved only under the JSON's `_archived_obelisk_opening_view` key. Slot 2
-"Headstone rows and monument circle" (label provisional); slots 3–9 open. Pin
-more via MCP: `sys.modules['oakland_view_guard'].capture_view(slot, label)`.
-KNOWN NIT: guard line 27's comment still says "obelisk centered" above the
-brick-avenue numbers — fix it in the next guard-edit save cycle, not with a
-dedicated 4.2 GB save.
+the guard (`oakland_view_guard.py` v6, all three v4 jobs untouched; durable
+copies renders/ghosting_fix/oakland_view_guard_v6.py + viewpoints_seed.json
+kept identical to the installed text; v5 file = the pre-shots stage). Per-slot
+optional fields: `arrival` = "cut" (default snap) | "ease" with `ease_seconds`
+(smoothstep flight from wherever the view is, exact landing); `motion` = orbit
+(`{"type":"orbit","axis_object":"Oakland_Turntable","rpm":1.0,"clockwise":true}`
+— snaps to the framing then rigidly rotates the whole view about the vertical
+axis through the named object's live world position, wall-clock 6 deg/s at
+1 RPM; clockwise-in-plan = sign −1, verified empirically). One generation-
+counted ~1/30 s animation timer (`bpy._oakland_anim_gen`), at most one shot
+active, any key press supersedes, and ANY external view change (Joel's hand)
+makes it yield silently (rotation epsilon 1−|dot|>1e-6 — q/−q-safe and immune
+to sub-threshold clamp corrections). No sorts fire during motion (turntable
+precedent); sort-on-rest catches the stop. Jumps take no undo step; re-running
+the guard still yields exactly 9 keymap items. ORTHO camera-measure gotcha:
+`view_matrix.inverted().translation` is the PIVOT — the eye is `view_location
++ view_rotation@(0,0,view_distance)`. Slots: 1 "Brick avenue from overhead"
+(ALSO the opening view — Joel's override; the obelisk opening framing is
+RETIRED, numbers preserved only under the JSON's
+`_archived_obelisk_opening_view` key); 2 "Headstone rows and monument circle"
+(ease 5.0 s — Joel chose 5); 3 "Obelisk orbit" (cut, then 1 RPM clockwise,
+radius ~123.37 m, height ~89.89 m, verified constant); 4–9 open. Pin more via
+MCP: `sys.modules['oakland_view_guard'].capture_view(slot, label)`. The v5
+"stale line-27 comment" nit was fixed in the v6 cycle.
 
 A100 cuMem VMM IS A PER-HOST LOTTERY (2026-07-24, cost ~$4 to learn): the
 arena's 75 GB cuMemAddressReserve succeeds on SOME RunPod A100 hosts and
@@ -736,3 +747,23 @@ re-confirms the granularity law: RAW total_mem reserves FAIL "invalid
 argument"; 1 GB/2 MB-ALIGNED sizes succeed (the arena patch aligns down).
 nvcc isn't on PATH in a fresh nvidia/cuda:devel container — use
 /usr/local/cuda/bin/nvcc + -L/usr/local/cuda/lib64/stubs.
+
+CORRECTION (2026-07-24, same night): the "A100 cuMem VMM per-host lottery" note
+ABOVE IS WRONG — I misdiagnosed it THREE times (host-detach, then SXM-only, then
+per-host-lottery). TRUE ROOT CAUSE, evidence-proven: arena_patch.diff sets
+`config.virtual_size = total_mem` (RAW). On A100 80GB, total_mem = 85,095,874,560 B
+is NOT a multiple of the 2 MB cuMem min-granularity (÷2097152 = 40577.0004), so
+`cuMemAddressReserve` rejects it ("invalid argument") → the broken traditional-alloc
+fallback crashes at forward.cu:179 iter 1. It fails on ALL A100s, not a random
+subset; A40 lanes work only because THEIR total_mem is coincidentally 2 MB-aligned.
+The probe/vmm_roll.sh is still a useful pre-flight but the RIGHT signal is its
+"exact arena values as-passed" block: raw total_mem FAILs, aligned OKs — and the
+ORIGINAL working bigcard used virtual=75 GB (aligned), which is why it succeeded.
+FIX (fleet-wide, safe — A40 already-aligned so a no-op there): align virtual_size
+DOWN to the min granularity before the reserve: `virtual_size = (total_mem/gran)*gran`
+(gran = cuMemGetAllocationGranularity MIN = 2 MB). virtual_size is an ADDRESS
+reservation (not physical commit — the arena commits only ~10-42 GB physical), so
+reserving ~79 GB aligned is fine and leaves ample physical for the ~5 GB sort
+buffer. Applied on the staged pod 2zf5sj8ce44rr7 (VMM-capable, build+tile ready).
+LESSON: when a failure "reproduces identically across hosts," suspect OUR code,
+not the hardware — I burned ~$4 and a night blaming the cards for our own patch bug.
