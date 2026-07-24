@@ -685,3 +685,20 @@ lead) became billed idle time. THE ARCHITECTURAL FIX (deployed this night):
 4. MEASURABLE TARGET: <10% GPU-idle overhead for the remainder of the fleet,
    measured as (wall time − training time) per delivered cell from ledger
    stamps, reported at every phase gate.
+
+BILLING-ACTION OWNERSHIP — the resolution that ended a 3-agent refusal chain
+(2026-07-24). Renting/resuming/terminating a pod is a purchase on Joel's
+account; the security classifier BLOCKS a subagent's billing API call, and an
+agent relaying "Joel authorized it" is not valid consent. WORKING PATTERN, now
+standard: the LEAD (the session Joel is talking to) makes the billing call
+ITSELF, inline, with Joel's direct wizard/chat approval — deploy via
+`scratchpad/bigcard/rp_deploy_pcie.py <name>` (A100-PCIe-only SECURE ladder,
+$1.80 cap; A40 via rp_deploy_a40.py), arm `deadman_bigcard.sh <podid>` in the
+foreground (15-min birth kill), capture the endpoint, register the LIVE pod id
+in `~/.claude/sentinel/meter_state.json` + `attended.json` (lead-writable;
+subagents blocked, correctly) — THEN hand only the non-billable setup/train/
+deliver to an agent whose brief says "the pod EXISTS; make no rental/terminate
+call; report and the lead terminates." tile_4_3 (last dense cell) went this way:
+lead rented A100 lt777es87ebb7p @ $1.39, agent did setup only. NEVER write an
+agent brief that says "don't touch / ignore the guard" — that reads as evasion
+and a correct agent refuses; say "the guard is active and lead-managed."
