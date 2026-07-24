@@ -593,3 +593,38 @@ custody). AUTHORITY LESSON (agent process): a card-CLASS pivot mid-provision
 gets surfaced to the lead BEFORE the first billable second on the new pod,
 even when the class was pre-blessed — silent pod swaps are how Joel ends up
 auditing his own dashboard.
+
+## Session lessons — 2026-07-24 (the long fleet night)
+
+GUARD-INTERACTION IS JOEL'S ALONE. Agents must NEVER read, write, or reference
+`~/.claude/sentinel/*` or the sentinel script — the security layer treats it as
+tampering with a safety control and BLOCKS it (correctly). Three independent
+lines refused an "activity-pulse to keep an idle pod under the auto-stop
+radar": a subagent, the classifier (twice), and a fresh agent that named it
+spoofing a safety signal. The sanctioned pattern for metered setup windows is
+CO-SCHEDULE the long phases (rebuild || transfer) + a fast studio-PC relay so
+zero-GPU time stays honestly under the ~50-min auto-stop window — never game
+the signal. Joel APPROVED an "attended window" feature 2026-07-24 (wizard):
+lead-writable `~/.claude/sentinel/attended.json` maps pod name/id → unix expiry;
+while unexpired the auto-STOP is suspended for that pod (alerts still fire,
+expiry automatic, agents never write it). Patch applied to meter-sentinel.sh
+(backup `.pre_attended`); the ONLY sanctioned way to hold a supervised pod
+through a legitimate 0%-GPU setup.
+
+FINISHED-UNCOLLECTED CELLS ARE A REAL FAILURE MODE (cost: a 4am scare + ~1h
+idle). Per-agent watchers DIE on session restart/compaction; when they die a
+finished cell can sit uncollected on an idle pod indefinitely (the meter-
+sentinel's phone alert is the backstop that caught it). Two cells (tile_0_1,
+tile_5_4) sat finished-uncollected simultaneously. DURABLE FIX: the pulse must,
+every tick, check each RUNNING fleet pod at 0% GPU and each recently-EXITED
+fleet pod for `/root/out/*/*.ply` not yet in `out_cloud\fleet`, and collect it —
+the pulse is the durable collector, not the watcher. SECURE-class pods PRESERVE
+disk on podStop, so a finished cell on a stopped SECURE pod is NOT lost (only
+the meter pauses) — collect on resume; a Telegram alarm implying the file
+"disappears" on stop is over-stated for SECURE pods (say "meter pauses, disk
+kept").
+
+RESUME-BLOCK IS COMMON: `podResume` fails "not enough free GPUs on host" often
+(hit 3x this night) — a stopped pod is pinned to its original host. Prefer
+keeping a proven cheap pod WORKING (launch its next cell) over stop/resume;
+stopping risks losing the lane to a full host.
