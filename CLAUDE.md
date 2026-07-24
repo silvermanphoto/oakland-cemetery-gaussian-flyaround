@@ -702,3 +702,37 @@ call; report and the lead terminates." tile_4_3 (last dense cell) went this way:
 lead rented A100 lt777es87ebb7p @ $1.39, agent did setup only. NEVER write an
 agent brief that says "don't touch / ignore the guard" — that reads as evasion
 and a correct agent refuses; say "the guard is active and lead-managed."
+
+## Guard v5 — viewpoint bookmarks (Blender session, 2026-07-24)
+
+Number-row keys 1–9 over the 3D viewport jump to saved framings. Data lives in
+a SEPARATE embedded text `oakland_viewpoints.json` (read fresh on every press —
+edit it and the next press obeys, no guard reload); mechanism is appended to
+guard v5 (`oakland_view_guard.py`, all three v4 jobs untouched; durable copies
+renders/ghosting_fix/oakland_view_guard_v5.py + viewpoints_seed.json kept
+identical to the installed text). Jumps SNAP, take no undo step, and need no
+manual re-sort (sort-on-rest fires ~0.45 s after arrival). Re-running the guard
+yields exactly 9 keymap items — never duplicates. JOEL'S OVERRIDE 2026-07-24:
+slot 1 "Brick avenue from overhead" is ALSO the opening view (DEFAULT_VIEW
+updated); the obelisk opening framing is RETIRED everywhere — its numbers are
+preserved only under the JSON's `_archived_obelisk_opening_view` key. Slot 2
+"Headstone rows and monument circle" (label provisional); slots 3–9 open. Pin
+more via MCP: `sys.modules['oakland_view_guard'].capture_view(slot, label)`.
+KNOWN NIT: guard line 27's comment still says "obelisk centered" above the
+brick-avenue numbers — fix it in the next guard-edit save cycle, not with a
+dedicated 4.2 GB save.
+
+A100 cuMem VMM IS A PER-HOST LOTTERY (2026-07-24, cost ~$4 to learn): the
+arena's 75 GB cuMemAddressReserve succeeds on SOME RunPod A100 hosts and
+FAILS on others (both PCIe and SXM) — the original bigcard host worked, two
+later A100s (one PCIe, one SXM) crashed at iter 1 ("VMM reservation failed"
+-> broken fallback -> cudaErrorInvalidDevice). A40/A6000 hosts don't hit it.
+It is HOST/container config, not the GPU model. EFFICIENCY FIX: roll A100s
+with a 10-second cuMem probe FIRST (scratchpad/vmm_roll.sh + bigcard/probe.cu
+— rents, boots, tests cuMemAddressReserve at 32..80 GB aligned, KEEPS on the
+75 GB OK line, TERMINATES on FAIL) so a dud host costs ~$0.10 not the ~$1
+of a full rebuild+transfer before discovering it at iter 1. probe.cu also
+re-confirms the granularity law: RAW total_mem reserves FAIL "invalid
+argument"; 1 GB/2 MB-ALIGNED sizes succeed (the arena patch aligns down).
+nvcc isn't on PATH in a fresh nvidia/cuda:devel container — use
+/usr/local/cuda/bin/nvcc + -L/usr/local/cuda/lib64/stubs.
